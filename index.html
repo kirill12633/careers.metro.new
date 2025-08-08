@@ -1,1 +1,139 @@
-rgrgrg
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Метро New — Работа</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background-color: #004080;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 24px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #a0c8ff;
+        }
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.05);
+        }
+        main h2 {
+            margin-top: 0;
+            color: #004080;
+            font-size: 28px;
+        }
+        main p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .sections {
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .section-box {
+            flex: 1;
+            background-color: #e6f0ff;
+            margin: 0 10px;
+            padding: 20px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,64,128,0.1);
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        .section-box:hover {
+            background-color: #cce0ff;
+        }
+        .section-box a {
+            text-decoration: none;
+            color: #004080;
+            font-weight: 700;
+            font-size: 18px;
+            display: block;
+            margin-top: 10px;
+        }
+        footer {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            margin-top: 60px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+            .sections {
+                flex-direction: column;
+            }
+            .section-box {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Метро New — Работа</h1>
+    <nav>
+        <a href="index.html">Главная</a>
+        <a href="vacancies.html">Вакансии</a>
+        <a href="news.html">Новости</a>
+        <a href="contacts.html">Контакты</a>
+    </nav>
+</header>
+
+<main>
+    <h2>Добро пожаловать на портал карьер Метро New</h2>
+    <p>Здесь вы найдете актуальные вакансии, новости компании и сможете связаться с нами для получения дополнительной информации о работе в проекте Метро New.</p>
+
+    <div class="sections">
+        <div class="section-box">
+            <strong>Вакансии</strong>
+            <a href="vacancies.html">Посмотреть открытые позиции</a>
+        </div>
+        <div class="section-box">
+            <strong>Новости</strong>
+            <a href="news.html">Последние новости компании</a>
+        </div>
+        <div class="section-box">
+            <strong>Контакты</strong>
+            <a href="contacts.html">Связаться с нами</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Метро New. Все права защищены.
+</footer>
+
+</body>
+</html>
