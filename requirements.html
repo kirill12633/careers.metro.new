@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Требования к вакансии - Метро New Работа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --primary-dark: #0052a3;
+            --secondary: #FFD700;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+        
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 150px);
+        }
+        
+        .vacancy-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .vacancy-header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .vacancy-header .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        
+        .vacancy-header .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(0, 102, 204, 0.1);
+        }
+        
+        .info-block {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .requirements-list {
+            list-style-type: none;
+        }
+        
+        .requirements-list li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .requirements-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -0.3rem;
+        }
+        
+        .recruitment-period {
+            display: flex;
+            gap: 1rem;
+            background-color: rgba(0, 102, 204, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .recruitment-period span {
+            font-weight: 600;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .actions {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .vacancy-header h1 {
+                font-size: 1.7rem;
+            }
+            
+            .section h2 {
+                font-size: 1.3rem;
+            }
+            
+            .recruitment-period {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span class="logo-icon">M</span>
+                    <span>Метро New Работа</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="news.html">Новости</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="vacancy-header">
+            <a href="vacancies.html" class="back-link">← Назад к списку вакансий</a>
+            <h1 id="vacancy-title">Название вакансии</h1>
+        </div>
+        
+        <div class="section">
+            <h2>Информация о вакансии</h2>
+            <div class="info-block" id="vacancy-info">
+                <p>Здесь будет общая информация о вакансии, описание должностных обязанностей и условий работы.</p>
+                <p>Метро New - это инновационный проект, и мы ищем талантливых специалистов, готовых развиваться вместе с нами.</p>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Требования к кандидату</h2>
+            <div class="info-block">
+                <ul class="requirements-list" id="vacancy-requirements">
+                    <li>Опыт работы в аналогичной должности от 1 года</li>
+                    <li>Знание основных принципов работы метрополитена</li>
+                    <li>Способность работать в команде</li>
+                    <li>Ответственность и внимательность</li>
+                    <li>Готовность к работе в сменном графике</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Информация о наборе</h2>
+            <div class="info-block">
+                <div id="recruitment-info">
+                    <p>Набор на данную позицию проводится в установленные сроки. Количество мест ограничено.</p>
+                    <div class="recruitment-period">
+                        <div><span>Начало приема заявок:</span> <span id="start-date">01.01.2024</span></div>
+                        <div><span>Окончание приема заявок:</span> <span id="end-date">31.01.2024</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="application-form.html" class="btn" id="apply-btn">Подать заявку</a>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">О компании</a>
+                <a href="#">Контакты</a>
+                <a href="#">Политика конфиденциальности</a>
+                <a href="#">Пользовательское соглашение</a>
+            </div>
+            <p class="copyright">© 2023 Метро New. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Получаем параметры из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const position = urlParams.get('position');
+        
+        // Устанавливаем данные в зависимости от вакансии
+        if (position) {
+            document.getElementById('vacancy-title').textContent = position;
+            document.getElementById('apply-btn').href = `application-form.html?position=${encodeURIComponent(position)}`;
+            
+            // Пример данных для разных вакансий (можно заменить на реальные)
+            const vacancyData = {
+                "Игровой администратор": {
+                    info: "<p>Администратор игрового процесса в проекте Метро New. Контроль за соблюдением правил, помощь игрокам, организация игровых событий.</p><p>Работа в команде модераторов, взаимодействие с разработчиками.</p>",
+                    requirements: [
+                        "Опыт администрирования игровых проектов от 6 месяцев",
+                        "Знание игровой механики Метро New",
+                        "Коммуникабельность и стрессоустойчивость",
+                        "Готовность к работе в вечерние и ночные смены",
+                        "Знание английского языка на базовом уровне"
+                    ],
+                    startDate: "15.01.2024",
+                    endDate: "15.02.2024"
+                },
+                "Модератор сервера": {
+                    info: "<p>Модерация игрового сервера Метро New. Проверка жалоб игроков, контроль чата, выявление нарушителей.</p><p>Работа в тесном контакте с администрацией проекта.</p>",
+                    requirements: [
+                        "Опыт модерации игровых серверов",
+                        "Знание правил проекта",
+                        "Умение объективно оценивать ситуации",
+                        "Грамотная речь",
+                        "Наличие игрового опыта в Метро New от 50 часов"
+                    ],
+                    startDate: "10.01.2024",
+                    endDate: "10.02.2024"
+                },
+                // Добавьте данные для других вакансий по аналогии
+            };
+            
+            // Устанавливаем данные, если они есть для текущей позиции
+            if (vacancyData[position]) {
+                document.getElementById('vacancy-info').innerHTML = vacancyData[position].info;
+                
+                const requirementsList = document.getElementById('vacancy-requirements');
+                requirementsList.innerHTML = '';
+                vacancyData[position].requirements.forEach(req => {
+                    const li = document.createElement('li');
+                    li.textContent = req;
+                    requirementsList.appendChild(li);
+                });
+                
+                document.getElementById('start-date').textContent = vacancyData[position].startDate;
+                document.getElementById('end-date').textContent = vacancyData[position].endDate;
+            }
+        }
+    </script>
+</body>
+</html>
