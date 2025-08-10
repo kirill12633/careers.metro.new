@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Метро New Работа</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0066CC;
+            --primary-dark: #0052a3;
+            --secondary: #FFD700;
+            --dark: #1A1A1A;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 70%;
+        }
+        
+        main {
+            padding: 2rem 0;
+            min-height: calc(100vh - 150px);
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: var(--gray);
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .faq-question:hover {
+            background-color: rgba(0, 102, 204, 0.05);
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+        
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 500px;
+        }
+        
+        .contact-support {
+            background-color: rgba(0, 102, 204, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        .contact-support h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span class="logo-icon">M</span>
+                    <span>Метро New Работа</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html">Главная</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="news.html">Новости</a>
+                    <a href="faq.html">FAQ</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Часто задаваемые вопросы</h1>
+            <p>Ответы на самые популярные вопросы о работе в Метро New</p>
+        </div>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">Как подать заявку на вакансию?</div>
+                <div class="faq-answer">
+                    <p>Для подачи заявки выберите интересующую вас вакансию на странице "Вакансии" и нажмите кнопку "Подать заявку". Заполните форму, прикрепите резюме и дополнительные материалы, если требуется. После отправки заявки с вами свяжется наш HR-специалист.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Какие документы нужны для трудоустройства?</div>
+                <div class="faq-answer">
+                    <p>Для оформления потребуются:</p>
+                    <ul>
+                        <li>Паспорт</li>
+                        <li>Трудовая книжка (при наличии)</li>
+                        <li>Документы об образовании</li>
+                        <li>ИНН</li>
+                        <li>СНИЛС</li>
+                        <li>Военный билет (для военнообязанных)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Какой график работы в Метро New?</div>
+                <div class="faq-answer">
+                    <p>График работы зависит от конкретной должности:</p>
+                    <ul>
+                        <li>Офисные сотрудники: 5/2 с 9:00 до 18:00</li>
+                        <li>Операционный персонал: сменный график (2/2, 3/3)</li>
+                        <li>Технические специалисты: гибкий график</li>
+                    </ul>
+                    <p>Точный график указывается в описании вакансии.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Есть ли испытательный срок?</div>
+                <div class="faq-answer">
+                    <p>Да, для большинства позиций установлен испытательный срок от 1 до 3 месяцев. В этот период мы оцениваем ваши профессиональные качества, а вы знакомитесь с особенностями работы в нашей компании.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Какие социальные гарантии предоставляет компания?</div>
+                <div class="faq-answer">
+                    <p>Мы предлагаем:</p>
+                    <ul>
+                        <li>Официальное трудоустройство</li>
+                        <li>Конкурентную заработную плату</li>
+                        <li>Медицинскую страховку</li>
+                        <li>Оплачиваемый отпуск</li>
+                        <li>Больничные</li>
+                        <li>Корпоративные программы обучения</li>
+                        <li>Льготный проезд</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Как проходит процесс отбора?</div>
+                <div class="faq-answer">
+                    <p>Процесс отбора обычно включает несколько этапов:</p>
+                    <ol>
+                        <li>Рассмотрение заявки и резюме</li>
+                        <li>Телефонное интервью с HR</li>
+                        <li>Очное собеседование</li>
+                        <li>Тестовое задание (для некоторых позиций)</li>
+                        <li>Принятие решения и предложение о работе</li>
+                    </ol>
+                    <p>Срок рассмотрения заявки - до 10 рабочих дней.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Можно ли устроиться без опыта работы?</div>
+                <div class="faq-answer">
+                    <p>Да, мы рассматриваем кандидатов без опыта на некоторые позиции (например, "Стажер", "Помощник"). Для таких вакансий мы проводим обучение перед началом работы. Требования к кандидатам без опыта указаны в описании вакансии.</p>
+                </div>
+            </div>
+            
+            <div class="contact-support">
+                <h3>Не нашли ответ на свой вопрос?</h3>
+                <p>Наша служба поддержки всегда готова помочь вам</p>
+                <a href="support.html" class="btn">Связаться с поддержкой</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">О компании</a>
+                <a href="#">Контакты</a>
+                <a href="#">Политика конфиденциальности</a>
+                <a href="#">Пользовательское соглашение</a>
+            </div>
+            <p class="copyright">© 2024 Метро New. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                
+                question.addEventListener('click', () => {
+                    // Закрываем все открытые вопросы
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                        }
+                    });
+                    
+                    // Открываем/закрываем текущий вопрос
+                    item.classList.toggle('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
