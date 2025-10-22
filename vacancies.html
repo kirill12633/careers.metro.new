@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вакансии - Метро New Работа</title>
+    <title>Форма заявки - Метро New Работа</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #0066CC;
@@ -13,6 +14,9 @@
             --dark: #1A1A1A;
             --light: #F8F9FA;
             --gray: #6C757D;
+            --error: #dc3545;
+            --success: #28a745;
+            --warning: #ffc107;
         }
         
         * {
@@ -112,6 +116,7 @@
         
         .page-header {
             margin-bottom: 2rem;
+            text-align: center;
         }
         
         .page-header h1 {
@@ -122,46 +127,245 @@
         
         .page-header p {
             color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        .vacancies-list {
-            margin-top: 2rem;
-        }
-        
-        .vacancy-card {
+        .application-form {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+        
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: #e9ecef;
+            z-index: 1;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            top: 15px;
+            left: 0;
+            height: 4px;
+            background-color: var(--primary);
+            z-index: 2;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+        }
+        
+        .step-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+        
+        .progress-step.active .step-icon {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .progress-step.completed .step-icon {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .step-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--gray);
+            text-align: center;
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-header {
             margin-bottom: 1.5rem;
-            transition: transform 0.3s ease;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
         }
         
-        .vacancy-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .vacancy-title {
-            font-size: 1.4rem;
+        .step-header h2 {
+            font-size: 1.5rem;
             color: var(--primary);
             margin-bottom: 0.5rem;
         }
         
-        .vacancy-actions {
+        .step-header p {
+            color: var(--gray);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .checkbox-group {
             display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-top: 5px;
+        }
+        
+        .checkbox-group label {
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+        
+        .position-preferences {
+            margin-top: 1.5rem;
+        }
+        
+        .position-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
-            flex-wrap: wrap;
+        }
+        
+        .position-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .position-option:hover {
+            border-color: var(--primary);
+            background-color: rgba(0, 102, 204, 0.05);
+        }
+        
+        .position-option.selected {
+            border-color: var(--primary);
+            background-color: rgba(0, 102, 204, 0.1);
+        }
+        
+        .position-option input {
+            width: auto;
+        }
+        
+        .position-option .position-info {
+            flex: 1;
+        }
+        
+        .position-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .position-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
         }
         
         .btn {
-            display: inline-block;
-            padding: 0.6rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.75rem 1.5rem;
             border-radius: 6px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
         }
         
         .btn-primary {
@@ -171,23 +375,169 @@
         
         .btn-primary:hover {
             background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
         }
         
         .btn-outline {
             border: 2px solid var(--primary);
             color: var(--primary);
+            background: transparent;
         }
         
         .btn-outline:hover {
             background-color: rgba(0, 102, 204, 0.1);
         }
         
-        .disclaimer {
+        .btn:disabled {
+            background-color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .alert i {
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+        
+        .alert-success {
+            background-color: rgba(40, 167, 69, 0.1);
+            border-left: 4px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-error {
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid var(--error);
+            color: var(--error);
+        }
+        
+        .alert-info {
             background-color: rgba(0, 102, 204, 0.1);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
             border-left: 4px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 193, 7, 0.1);
+            border-left: 4px solid var(--warning);
+            color: #856404;
+        }
+        
+        .roblox-fields {
+            background-color: rgba(0, 102, 204, 0.05);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .roblox-toggle {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .roblox-toggle input {
+            width: auto;
+        }
+        
+        .character-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+        
+        .character-counter.warning {
+            color: var(--warning);
+        }
+        
+        .character-counter.error {
+            color: var(--error);
+        }
+        
+        .form-tips {
+            background-color: rgba(255, 193, 7, 0.05);
+            border-left: 4px solid var(--warning);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .form-tips h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0.5rem;
+            color: #856404;
+        }
+        
+        .form-tips ul {
+            padding-left: 1.5rem;
+            color: #856404;
+        }
+        
+        .form-tips li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .application-preview {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .preview-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .preview-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .preview-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .preview-value {
+            color: var(--dark);
         }
         
         footer {
@@ -235,14 +585,30 @@
                 font-size: 2rem;
             }
             
-            .vacancy-actions {
+            .application-form {
+                padding: 1.5rem;
+            }
+            
+            .form-progress {
+                margin-bottom: 2rem;
+            }
+            
+            .step-label {
+                font-size: 0.75rem;
+            }
+            
+            .position-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 1rem;
             }
             
             .btn {
                 width: 100%;
-                text-align: center;
+                justify-content: center;
             }
         }
     </style>
@@ -252,7 +618,7 @@
         <div class="container">
             <nav>
                 <div class="logo">
-                    <span class="logo-icon"></span>
+                    <span class="logo-icon">M</span>
                     <span>Метро New Работа</span>
                 </div>
                 <div class="nav-links">
@@ -267,75 +633,661 @@
 
     <main class="container">
         <div class="page-header">
-            <h1>Вакансии</h1>
-            <p>Ниже приведен список актуальных вакансий по проекту Метро New</p>
+            <h1>Форма заявки</h1>
+            <p>Заполните анкету для подачи заявки на персонал проекта. Процесс состоит из нескольких шагов для вашего удобства.</p>
         </div>
         
-        <div class="disclaimer">
-            Это не означает, что они все открыты в данный момент, но вы можете перейти по ссылкам, чтобы просмотреть детали и подать заявку.
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <div>
+                <strong>Отбор на персонал проекта</strong><br>
+                Здесь вы заполняете мини-анкету, после чего вам будет отправлена ссылка на сервер администрации. На сервере вы сможете подать заявку на разные должности: модератор, администратор и другие.
+            </div>
         </div>
         
-        <div class="vacancies-list">
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Игровой администратор</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Игровой администратор" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Игровой администратор" class="btn btn-outline">Открыть требования и описание</a>
+        <div class="application-form">
+            <div class="form-progress">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-step active" id="step1">
+                    <div class="step-icon">1</div>
+                    <div class="step-label">Контактные данные</div>
+                </div>
+                <div class="progress-step" id="step2">
+                    <div class="step-icon">2</div>
+                    <div class="step-label">Предпочтения</div>
+                </div>
+                <div class="progress-step" id="step3">
+                    <div class="step-icon">3</div>
+                    <div class="step-label">Дополнительно</div>
+                </div>
+                <div class="progress-step" id="step4">
+                    <div class="step-icon">4</div>
+                    <div class="step-label">Подтверждение</div>
                 </div>
             </div>
             
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Модератор сервера</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Модератор сервера" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Модератор сервера" class="btn btn-outline">Открыть требования и описание</a>
+            <form id="applicationForm">
+                <!-- Шаг 1: Контактные данные -->
+                <div class="form-step active" id="formStep1">
+                    <div class="step-header">
+                        <h2>Контактные данные</h2>
+                        <p>Заполните основную информацию о себе</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email адрес</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@example.com" required>
+                    </div>
+                    
+                    <div class="roblox-toggle">
+                        <input type="checkbox" id="roblox-related" name="roblox-related" checked>
+                        <label for="roblox-related">Должность связана с Roblox</label>
+                    </div>
+                    
+                    <div id="robloxFields" class="roblox-fields">
+                        <div class="form-group">
+                            <label for="robloxNickname">1. Ник в Roblox</label>
+                            <input type="text" id="robloxNickname" name="robloxNickname" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="robloxProfile">2. Ссылка на профиль Roblox</label>
+                            <input type="url" id="robloxProfile" name="robloxProfile" placeholder="https://www.roblox.com/users/..." required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accountCreation">3. Когда создан аккаунт?</label>
+                            <input type="text" id="accountCreation" name="accountCreation" placeholder="Например: 2020 год" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accountActivity">4. Активны ли вы на этом аккаунте?</label>
+                            <select id="accountActivity" name="accountActivity" required>
+                                <option value="">-- Выберите ответ --</option>
+                                <option value="Да, активно использую">Да, активно использую</option>
+                                <option value="Иногда заходил">Иногда заходил</option>
+                                <option value="Недавно восстановил">Недавно восстановил</option>
+                                <option value="Нет, не активен">Нет, не активен</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discordNickname">5. Ник в Discord</label>
+                        <input type="text" id="discordNickname" name="discordNickname" placeholder="Например: User#1234" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discordCreation">6. Когда создан Discord-аккаунт?</label>
+                        <input type="text" id="discordCreation" name="discordCreation" placeholder="Например: 2019 год" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serverTime">7. Как давно вы на нашем сервере?</label>
+                        <input type="text" id="serverTime" name="serverTime" placeholder="Например: 2 месяца" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <a href="vacancies.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Назад к вакансиям</a>
+                        <button type="button" class="btn btn-primary next-step" data-step="2">Далее <i class="fas fa-arrow-right"></i></button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Модератор сайта</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Модератор сайта" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Модератор сайта" class="btn btn-outline">Открыть требования и описание</a>
+                
+                <!-- Шаг 2: Предпочтения по должностям -->
+                <div class="form-step" id="formStep2">
+                    <div class="step-header">
+                        <h2>Предпочтения по должностям</h2>
+                        <p>Выберите должности, которые вас интересуют (можно выбрать несколько)</p>
+                    </div>
+                    
+                    <div class="position-preferences">
+                        <div class="position-options">
+                            <div class="position-option" data-position="Игровой администратор">
+                                <input type="checkbox" id="position-admin" name="preferredPositions" value="Игровой администратор">
+                                <div class="position-info">
+                                    <div class="position-name">Игровой администратор</div>
+                                    <div class="position-desc">Управление игровым процессом, помощь игрокам</div>
+                                </div>
+                            </div>
+                            
+                            <div class="position-option" data-position="Модератор сервера">
+                                <input type="checkbox" id="position-moderator" name="preferredPositions" value="Модератор сервера">
+                                <div class="position-info">
+                                    <div class="position-name">Модератор сервера</div>
+                                    <div class="position-desc">Контроль чата, решение конфликтов</div>
+                                </div>
+                            </div>
+                            
+                            <div class="position-option" data-position="Модератор сайта">
+                                <input type="checkbox" id="position-webmod" name="preferredPositions" value="Модератор сайта">
+                                <div class="position-info">
+                                    <div class="position-name">Модератор сайта</div>
+                                    <div class="position-desc">Модерация контента на сайте проекта</div>
+                                </div>
+                            </div>
+                            
+                            <div class="position-option" data-position="Разработчик проекта">
+                                <input type="checkbox" id="position-developer" name="preferredPositions" value="Разработчик проекта">
+                                <div class="position-info">
+                                    <div class="position-name">Разработчик проекта</div>
+                                    <div class="position-desc">Создание и улучшение функционала проекта</div>
+                                </div>
+                            </div>
+                            
+                            <div class="position-option" data-position="Менеджер проекта">
+                                <input type="checkbox" id="position-manager" name="preferredPositions" value="Менеджер проекта">
+                                <div class="position-info">
+                                    <div class="position-name">Менеджер проекта</div>
+                                    <div class="position-desc">Координация работы команды, планирование</div>
+                                </div>
+                            </div>
+                            
+                            <div class="position-option" data-position="Тестировщик игры">
+                                <input type="checkbox" id="position-tester" name="preferredPositions" value="Тестировщик игры">
+                                <div class="position-info">
+                                    <div class="position-name">Тестировщик игры</div>
+                                    <div class="position-desc">Поиск ошибок, тестирование нового контента</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="positionPriority">Какая должность вас интересует больше всего?</label>
+                        <select id="positionPriority" name="positionPriority">
+                            <option value="">-- Выберите приоритетную должность --</option>
+                            <option value="Игровой администратор">Игровой администратор</option>
+                            <option value="Модератор сервера">Модератор сервера</option>
+                            <option value="Модератор сайта">Модератор сайта</option>
+                            <option value="Разработчик проекта">Разработчик проекта</option>
+                            <option value="Менеджер проекта">Менеджер проекта</option>
+                            <option value="Тестировщик игры">Тестировщик игры</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-tips">
+                        <h3><i class="fas fa-lightbulb"></i> Советы по выбору:</h3>
+                        <ul>
+                            <li>Выбирайте должности, которые соответствуют вашим навыкам и интересам</li>
+                            <li>Не бойтесь пробовать что-то новое - у нас есть обучающие курсы</li>
+                            <li>Укажите приоритетную должность, чтобы мы понимали ваши предпочтения</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline prev-step" data-step="1"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <button type="button" class="btn btn-primary next-step" data-step="3">Далее <i class="fas fa-arrow-right"></i></button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Разработчик проекта</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Разработчик проекта" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Разработчик проекта" class="btn btn-outline">Открыть требования и описание</a>
+                
+                <!-- Шаг 3: Дополнительная информация -->
+                <div class="form-step" id="formStep3">
+                    <div class="step-header">
+                        <h2>Дополнительная информация</h2>
+                        <p>Расскажите о себе и ответьте на важные вопросы</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="motivation">8. Почему хотите к нам в команду?</label>
+                        <textarea id="motivation" name="motivation" required></textarea>
+                        <div class="character-counter" id="motivationCounter">0/500</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="blacklist">9. Есть ли у вас ЧС (чёрный список)?</label>
+                        <select id="blacklist" name="blacklist" required>
+                            <option value="">-- Выберите ответ --</option>
+                            <option value="Нет, нет ЧС">Нет, нет ЧС</option>
+                            <option value="Да, но снят">Да, но снят</option>
+                            <option value="Да, есть ЧС">Да, есть ЧС</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mistakes">10. Вы понимаете, что за 3 ошибки вас могут снять с должности?</label>
+                        <select id="mistakes" name="mistakes" required>
+                            <option value="">-- Выберите ответ --</option>
+                            <option value="Да, понимаю">Да, понимаю</option>
+                            <option value="Нет, не знал об этом">Нет, не знал об этом</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="violations">11. Есть ли у вас нарушения или что-то подобное (если есть — будет отказ)?</label>
+                        <textarea id="violations" name="violations" required></textarea>
+                        <div class="character-counter" id="violationsCounter">0/300</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additional">12. Дополнительное описание (если хотите)</label>
+                        <textarea id="additional" name="additional"></textarea>
+                        <div class="character-counter" id="additionalCounter">0/400</div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline prev-step" data-step="2"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <button type="button" class="btn btn-primary next-step" data-step="4">Далее <i class="fas fa-arrow-right"></i></button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Менеджер проекта</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Менеджер проекта" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Менеджер проекта" class="btn btn-outline">Открыть требования и описание</a>
+                
+                <!-- Шаг 4: Подтверждение и согласие -->
+                <div class="form-step" id="formStep4">
+                    <div class="step-header">
+                        <h2>Подтверждение данных</h2>
+                        <p>Проверьте введенные данные и подтвердите согласие с правилами</p>
+                    </div>
+                    
+                    <div class="application-preview" id="applicationPreview">
+                        <!-- Предварительный просмотр данных будет сгенерирован JavaScript -->
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="policy" name="policy" required>
+                        <label for="policy">Я согласен с <a href="#">политикой конфиденциальности</a> и <a href="#">правилами проекта</a></label>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="personalFile" name="personalFile" required>
+                        <label for="personalFile">Я понимаю, что у каждого сотрудника будет личное дело, которое может использоваться как подтверждение опыта и достижений</label>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <strong>Важно знать:</strong> У каждого сотрудника будет личное дело. Если вы прекратите работу, ваше дело перейдёт в архив. Это дело можно использовать как подтверждение опыта и достижений. У нас есть курсы, которые помогут вам в обучении и работе.
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline prev-step" data-step="3"><i class="fas fa-arrow-left"></i> Назад</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Отправить заявку
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="vacancy-card">
-                <h2 class="vacancy-title">Тестировщик игры</h2>
-                <div class="vacancy-actions">
-                    <a href="application-form.html?position=Тестировщик игры" class="btn btn-primary">Перейти к форме заявки</a>
-                    <a href="requirements.html?position=Тестировщик игры" class="btn btn-outline">Открыть требования и описание</a>
-                </div>
-            </div>
+            </form>
         </div>
     </main>
 
     <footer>
         <div class="container">
             <div class="footer-links">
-                <a href="https://discord.com/invite/WjGZBs3HMX">О компании</a>
-                <a hrefhttps://discord.com/invite/WjGZBs3HMXКонтакты</a>
-                <a href="https://docs.google.com/document/d/1Y_3cs7qEcSehVIirIPSSqJQjxOco5ixipMF6zXSSO_I/edit?usp=sharing">Политика конфиденциальности</a>
-                <a href="https://docs.google.com/document/d/1bbDwsFuSFou-qqcIvhb44mton1z2TY32F9SqcYnMcyI/edit?usp=sharing">Пользовательское соглашение</a>
+                <a href="#">О компании</a>
+                <a href="#">Контакты</a>
+                <a href="#">Политика конфиденциальности</a>
+                <a href="#">Пользовательское соглашение</a>
             </div>
-            <p class="copyright">© 2025 Метро New. Все права защищены.</p>
+            <p class="copyright">© 2023 Метро New. Все права защищены.</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('applicationForm');
+            const progressBar = document.getElementById('progressBar');
+            const steps = document.querySelectorAll('.progress-step');
+            const formSteps = document.querySelectorAll('.form-step');
+            const nextButtons = document.querySelectorAll('.next-step');
+            const prevButtons = document.querySelectorAll('.prev-step');
+            const robloxCheckbox = document.getElementById('roblox-related');
+            const robloxFields = document.getElementById('robloxFields');
+            const submitBtn = document.getElementById('submitBtn');
+            const applicationPreview = document.getElementById('applicationPreview');
+            const positionOptions = document.querySelectorAll('.position-option');
+            
+            let currentStep = 1;
+            const totalSteps = 4;
+            
+            // Инициализация прогресс-бара
+            updateProgressBar();
+            
+            // Переключение полей Roblox
+            robloxCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    robloxFields.style.display = 'block';
+                    document.getElementById('robloxNickname').required = true;
+                    document.getElementById('robloxProfile').required = true;
+                    document.getElementById('accountCreation').required = true;
+                    document.getElementById('accountActivity').required = true;
+                } else {
+                    robloxFields.style.display = 'none';
+                    document.getElementById('robloxNickname').required = false;
+                    document.getElementById('robloxProfile').required = false;
+                    document.getElementById('accountCreation').required = false;
+                    document.getElementById('accountActivity').required = false;
+                }
+            });
+            
+            // Обработка выбора должностей
+            positionOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                    }
+                    
+                    if (this.querySelector('input[type="checkbox"]').checked) {
+                        this.classList.add('selected');
+                    } else {
+                        this.classList.remove('selected');
+                    }
+                });
+            });
+            
+            // Счетчики символов
+            setupCharacterCounter('motivation', 'motivationCounter', 500);
+            setupCharacterCounter('violations', 'violationsCounter', 300);
+            setupCharacterCounter('additional', 'additionalCounter', 400);
+            
+            // Кнопки "Далее"
+            nextButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const nextStep = parseInt(this.getAttribute('data-step'));
+                    if (validateStep(currentStep)) {
+                        goToStep(nextStep);
+                    }
+                });
+            });
+            
+            // Кнопки "Назад"
+            prevButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const prevStep = parseInt(this.getAttribute('data-step'));
+                    goToStep(prevStep);
+                });
+            });
+            
+            // Функция перехода к шагу
+            function goToStep(step) {
+                // Скрываем текущий шаг
+                document.getElementById(`formStep${currentStep}`).classList.remove('active');
+                steps[currentStep - 1].classList.remove('active');
+                
+                // Показываем новый шаг
+                document.getElementById(`formStep${step}`).classList.add('active');
+                steps[step - 1].classList.add('active');
+                
+                currentStep = step;
+                updateProgressBar();
+                
+                // Если переходим к шагу подтверждения, обновляем предварительный просмотр
+                if (step === 4) {
+                    updateApplicationPreview();
+                }
+            }
+            
+            // Обновление прогресс-бара
+            function updateProgressBar() {
+                const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+                progressBar.style.width = `${progress}%`;
+                
+                // Отмечаем завершенные шаги
+                steps.forEach((step, index) => {
+                    if (index < currentStep - 1) {
+                        step.classList.add('completed');
+                    } else {
+                        step.classList.remove('completed');
+                    }
+                });
+            }
+            
+            // Валидация шага
+            function validateStep(step) {
+                const currentFormStep = document.getElementById(`formStep${step}`);
+                const inputs = currentFormStep.querySelectorAll('input, select, textarea');
+                let isValid = true;
+                
+                // Проверка выбора хотя бы одной должности на шаге 2
+                if (step === 2) {
+                    const selectedPositions = document.querySelectorAll('input[name="preferredPositions"]:checked');
+                    if (selectedPositions.length === 0) {
+                        isValid = false;
+                        showAlert('Пожалуйста, выберите хотя бы одну интересующую вас должность', 'error');
+                    }
+                }
+                
+                inputs.forEach(input => {
+                    if (input.hasAttribute('required') && !input.value.trim() && input.type !== 'checkbox') {
+                        isValid = false;
+                        input.style.borderColor = 'var(--error)';
+                    } else {
+                        input.style.borderColor = '';
+                    }
+                });
+                
+                if (!isValid && step !== 2) {
+                    showAlert('Пожалуйста, заполните все обязательные поля', 'error');
+                }
+                
+                return isValid;
+            }
+            
+            // Настройка счетчика символов
+            function setupCharacterCounter(textareaId, counterId, maxLength) {
+                const textarea = document.getElementById(textareaId);
+                const counter = document.getElementById(counterId);
+                
+                textarea.addEventListener('input', function() {
+                    const length = this.value.length;
+                    counter.textContent = `${length}/${maxLength}`;
+                    
+                    if (length > maxLength * 0.9) {
+                        counter.classList.add('warning');
+                    } else {
+                        counter.classList.remove('warning');
+                    }
+                    
+                    if (length > maxLength) {
+                        counter.classList.add('error');
+                    } else {
+                        counter.classList.remove('error');
+                    }
+                });
+            }
+            
+            // Обновление предварительного просмотра заявки
+            function updateApplicationPreview() {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                let previewHTML = '';
+                
+                // Добавляем контактную информацию
+                previewHTML += `
+                    <div class="preview-item">
+                        <div class="preview-label">Email</div>
+                        <div class="preview-value">${data.email}</div>
+                    </div>
+                `;
+                
+                // Добавляем информацию Roblox, если есть
+                if (data['roblox-related']) {
+                    previewHTML += `
+                        <div class="preview-item">
+                            <div class="preview-label">Roblox ник</div>
+                            <div class="preview-value">${data.robloxNickname}</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Профиль Roblox</div>
+                            <div class="preview-value">${data.robloxProfile}</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Аккаунт создан</div>
+                            <div class="preview-value">${data.accountCreation}</div>
+                        </div>
+                        <div class="preview-item">
+                            <div class="preview-label">Активность аккаунта</div>
+                            <div class="preview-value">${data.accountActivity}</div>
+                        </div>
+                    `;
+                }
+                
+                // Добавляем информацию о выбранных должностях
+                const selectedPositions = Array.from(document.querySelectorAll('input[name="preferredPositions"]:checked'))
+                    .map(checkbox => checkbox.value)
+                    .join(', ');
+                
+                previewHTML += `
+                    <div class="preview-item">
+                        <div class="preview-label">Интересующие должности</div>
+                        <div class="preview-value">${selectedPositions}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Приоритетная должность</div>
+                        <div class="preview-value">${data.positionPriority || 'Не указана'}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Discord ник</div>
+                        <div class="preview-value">${data.discordNickname}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Discord создан</div>
+                        <div class="preview-value">${data.discordCreation}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">На сервере</div>
+                        <div class="preview-value">${data.serverTime}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Черный список</div>
+                        <div class="preview-value">${data.blacklist}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Понимание правил</div>
+                        <div class="preview-value">${data.mistakes}</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Мотивация</div>
+                        <div class="preview-value">${data.motivation}</div>
+                    </div>
+                `;
+                
+                applicationPreview.innerHTML = previewHTML;
+            }
+            
+            // Обработка отправки формы
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!validateStep(currentStep)) {
+                    return;
+                }
+                
+                // Получаем значения формы
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Показываем индикатор загрузки
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                
+                try {
+                    // Отправляем данные в Discord вебхук
+                    const response = await sendToDiscord(data);
+                    
+                    if (response.ok) {
+                        // Показываем сообщение об успехе
+                        showAlert('Заявка успешно отправлена! В ближайшее время с вами свяжутся.', 'success');
+                        form.reset();
+                        
+                        // Сбрасываем визуальное состояние выбранных должностей
+                        positionOptions.forEach(option => {
+                            option.classList.remove('selected');
+                        });
+                        
+                        // Возвращаем к первому шагу
+                        goToStep(1);
+                    } else {
+                        throw new Error('Ошибка при отправке заявки');
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    showAlert('Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже.', 'error');
+                } finally {
+                    // Восстанавливаем кнопку
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить заявку';
+                }
+            });
+            
+            // Функция отправки данных в Discord
+            async function sendToDiscord(data) {
+                const webhookUrl = 'https://discord.com/api/webhooks/1422279632643948595/iZ8ji9S-ocIRwdNqSTdK8WvzlBY-7YjrzAfgUvC9D45W3lQuFrWYhx-h2Lh3xJ5oh4Tp';
+                
+                // Получаем выбранные должности
+                const selectedPositions = Array.from(document.querySelectorAll('input[name="preferredPositions"]:checked'))
+                    .map(checkbox => checkbox.value)
+                    .join(', ');
+                
+                // Форматируем данные для Discord
+                const discordMessage = {
+                    content: `**Новая заявка на персонал проекта**`,
+                    embeds: [{
+                        title: 'Контактные данные',
+                        fields: [
+                            { name: 'Email', value: data.email, inline: true },
+                            { name: 'Discord ник', value: data.discordNickname, inline: true },
+                            { name: 'Discord создан', value: data.discordCreation, inline: true },
+                            { name: 'На сервере', value: data.serverTime, inline: true },
+                            { name: 'Интересующие должности', value: selectedPositions, inline: false },
+                            { name: 'Приоритетная должность', value: data.positionPriority || 'Не указана', inline: true },
+                            { name: 'Черный список', value: data.blacklist, inline: true },
+                            { name: 'Понимание правил', value: data.mistakes, inline: true },
+                            { name: 'Нарушения', value: data.violations, inline: false }
+                        ],
+                        description: `**Мотивация:** ${data.motivation}\n\n**Дополнительно:** ${data.additional || 'Не указано'}`,
+                        color: 3447003,
+                        timestamp: new Date().toISOString()
+                    }]
+                };
+                
+                // Добавляем поля Roblox, если они есть
+                if (data['roblox-related']) {
+                    discordMessage.embeds[0].fields.unshift(
+                        { name: 'Roblox ник', value: data.robloxNickname, inline: true },
+                        { name: 'Профиль Roblox', value: data.robloxProfile, inline: true },
+                        { name: 'Аккаунт создан', value: data.accountCreation, inline: true },
+                        { name: 'Активность', value: data.accountActivity, inline: true }
+                    );
+                }
+                
+                // Отправляем запрос
+                return fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(discordMessage),
+                });
+            }
+            
+            // Функция показа уведомления
+            function showAlert(message, type) {
+                // Удаляем существующие уведомления
+                const existingAlert = document.querySelector('.alert');
+                if (existingAlert && !existingAlert.classList.contains('alert-info')) {
+                    existingAlert.remove();
+                }
+                
+                // Создаем новое уведомление
+                const alert = document.createElement('div');
+                alert.className = `alert alert-${type}`;
+                alert.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <div>${message}</div>
+                `;
+                
+                // Вставляем перед формой
+                form.parentNode.insertBefore(alert, form);
+                
+                // Автоматически скрываем через 5 секунд
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 5000);
+            }
+        });
+    </script>
 </body>
 </html>
