@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Отклик на вакансию — Метро New Работа</title>
+
+    <!-- ===== ИКОНКИ САЙТА ===== -->
+    <link rel="shortcut icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" />
+
+    <!-- ===== ШРИФТЫ ===== -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- ===== FIREBASE ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+
+    <style>
+        /* ===== ПЕРЕМЕННЫЕ ===== */
+        :root {
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --bg-primary: #0d1526;
+            --bg-secondary: #131c33;
+            --bg-card: #182444;
+            --bg-card-hover: #1d2b4f;
+            --text-primary: #f2f4fa;
+            --text-secondary: #a6b0cc;
+            --text-tertiary: #77819e;
+            --accent: #FFD700;
+            --accent-hover: #ffe14d;
+            --accent-light: rgba(255, 215, 0, 0.15);
+            --accent-glow: rgba(255, 215, 0, 0.2);
+            --blue: #4d94ff;
+            --blue-hover: #7aacff;
+            --green: #34a853;
+            --green-light: rgba(52, 168, 83, 0.15);
+            --red: #f28b82;
+            --red-light: rgba(242, 139, 130, 0.15);
+            --border: #253460;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+            color-scheme: dark;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f4f6fb;
+            --bg-card: #ffffff;
+            --bg-card-hover: #eef1f9;
+            --text-primary: #14151f;
+            --text-secondary: #565f7a;
+            --text-tertiary: #8890a8;
+            --accent: #e6c200;
+            --accent-hover: #c2a300;
+            --accent-light: rgba(230, 194, 0, 0.12);
+            --accent-glow: rgba(230, 194, 0, 0.18);
+            --blue: #0066CC;
+            --blue-hover: #0052a3;
+            --green: #1e8e4e;
+            --green-light: rgba(30, 142, 78, 0.1);
+            --red: #d93025;
+            --red-light: rgba(217, 48, 37, 0.1);
+            --border: #e2e6f0;
+            --shadow: 0 8px 30px rgba(20, 22, 40, 0.1);
+            --shadow-lg: 0 16px 40px rgba(20, 22, 40, 0.12);
+            color-scheme: light;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER ===== */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.25s;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: #0d1526;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px var(--accent-glow);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--green), #2d8f4e);
+            color: #fff;
+        }
+        .btn-green:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+        }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px var(--accent-glow);
+        }
+
+        .theme-toggle .fa-moon {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        .theme-toggle .fa-sun {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.3);
+        }
+        [data-theme="light"] .theme-toggle .fa-sun {
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+            color: var(--accent);
+        }
+        [data-theme="light"] .theme-toggle .fa-moon {
+            opacity: 0;
+            transform: rotate(-90deg) scale(0.3);
+        }
+
+        /* ===== VACANCY INFO ===== */
+        .vacancy-info {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .vacancy-info .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 14px;
+            border-radius: 50px;
+            background: var(--accent-light);
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .vacancy-info .badge.closed {
+            background: var(--text-disabled);
+            color: var(--text-secondary);
+        }
+
+        .vacancy-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        .vacancy-info .meta {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .vacancy-info .meta i {
+            color: var(--accent);
+            width: 16px;
+        }
+
+        /* ===== FORM ===== */
+        .form-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-section .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .form-group label .required {
+            color: var(--red);
+            margin-left: 4px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: border-color 0.25s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group .hint {
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group.file-upload input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .form-group.file-upload input[type="file"]::file-selector-button {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--accent);
+            color: #0d1526;
+            font-weight: 700;
+            cursor: pointer;
+            margin-right: 12px;
+            transition: background 0.2s;
+        }
+
+        .form-group.file-upload input[type="file"]::file-selector-button:hover {
+            background: var(--accent-hover);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        /* ===== SUCCESS ===== */
+        .success-section {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--green);
+            border-radius: var(--radius-lg);
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .success-section.show {
+            display: block;
+        }
+
+        .success-section i {
+            font-size: 4rem;
+            color: var(--green);
+            display: block;
+            margin-bottom: 16px;
+        }
+
+        .success-section h2 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .success-section p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto 24px;
+        }
+
+        /* ===== LOADING ===== */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 3rem;
+            color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 24px;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            max-width: 400px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: var(--green);
+        }
+        .toast.error {
+            border-color: var(--red);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .page-header .header-actions {
+                justify-content: flex-start;
+            }
+            .form-section {
+                padding: 24px;
+            }
+            .vacancy-info {
+                padding: 18px 20px;
+            }
+            .success-section {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .form-section {
+                padding: 18px;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .form-actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== HEADER ===== -->
+        <header class="page-header">
+            <h1><i class="fas fa-paper-plane" style="color:var(--accent);"></i> Отклик на вакансию</h1>
+            <div class="header-actions">
+                <a href="https://kirill12633.github.io/careers.metro.new/vacancies" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Назад к вакансиям
+                </a>
+                <button class="theme-toggle" id="themeToggle" title="Сменить тему">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- ===== VACANCY INFO ===== -->
+        <div class="vacancy-info" id="vacancyInfo">
+            <div class="loading" id="infoLoading">
+                <i class="fas fa-spinner"></i>
+                <p>Загрузка информации о вакансии...</p>
+            </div>
+            <div id="infoContent" style="display:none;">
+                <span class="badge" id="vBadge">Открыта</span>
+                <h2 id="vTitle">Название вакансии</h2>
+                <div class="meta">
+                    <span><i class="fas fa-map-pin"></i> <span id="vLocation">—</span></span>
+                    <span><i class="fas fa-clock"></i> <span id="vSchedule">—</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FORM ===== -->
+        <section class="form-section" id="formSection">
+            <h2>Анкета соискателя</h2>
+            <p class="subtitle">Заполните форму, чтобы отправить заявку на вакансию</p>
+
+            <form id="applicationForm">
+                <!-- Скрытое поле с ID вакансии -->
+                <input type="hidden" id="vacancyId" value="" />
+                <input type="hidden" id="vacancyTitle" value="" />
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">Имя <span class="required">*</span></label>
+                        <input type="text" id="fullName" placeholder="Иван" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input type="email" id="email" placeholder="ivan@example.com" required />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Возраст <span class="required">*</span></label>
+                        <input type="number" id="age" placeholder="18" min="14" max="99" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Опыт работы <span class="required">*</span></label>
+                        <textarea id="experience" placeholder="Расскажите о вашем опыте работы, проектах и навыках..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivation">Почему вы хотите работать у нас? <span class="required">*</span></label>
+                    <textarea id="motivation" placeholder="Почему вы выбрали именно нашу компанию?" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="portfolio">Ссылка на портфолио или GitHub (если есть)</label>
+                    <input type="url" id="portfolio" placeholder="https://github.com/your-username" />
+                </div>
+
+                <div class="form-group file-upload">
+                    <label for="resume">Прикрепить резюме <span class="required">*</span></label>
+                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required />
+                    <div class="hint">Поддерживаемые форматы: PDF, DOC, DOCX. Максимальный размер: 10 МБ</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalInfo">Дополнительная информация</label>
+                    <textarea id="additionalInfo" placeholder="Всё, что вы хотите добавить к своей заявке..." rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-green" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Отправить заявку
+                    </button>
+                    <button type="reset" class="btn btn-secondary">
+                        <i class="fas fa-undo"></i> Очистить форму
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ===== SUCCESS ===== -->
+        <section class="success-section" id="successSection">
+            <i class="fas fa-check-circle"></i>
+            <h2>Заявка успешно отправлена!</h2>
+            <p>Спасибо за вашу заявку. Мы рассмотрим её в ближайшее время и свяжемся с вами.</p>
+            <a href="https://kirill12633.github.io/careers.metro.new/vacancies" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Вернуться к вакансиям
+            </a>
+        </section>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toastTitle">Готово!</div>
+        <div class="toast-message" id="toastMessage">Действие выполнено</div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- ===== FIREBASE + MAIN SCRIPTS ===== -->
+    <!-- ============================================================ -->
+    <script>
+        // ===== FIREBASE CONFIG =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyAVSAXTU1VqF36GJA1pQOfxRxo3_ixW7F4",
+            authDomain: "metro-new-admin.firebaseapp.com",
+            projectId: "metro-new-admin",
+            storageBucket: "metro-new-admin.firebasestorage.app",
+            messagingSenderId: "769002010414",
+            appId: "1:769002010414:web:bdeb93a7eddc4cab63ecbf"
+        };
+
+        // ===== ИНИЦИАЛИЗАЦИЯ FIREBASE =====
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // ===== DOM ЭЛЕМЕНТЫ =====
+        const infoLoading = document.getElementById('infoLoading');
+        const infoContent = document.getElementById('infoContent');
+        const vBadge = document.getElementById('vBadge');
+        const vTitle = document.getElementById('vTitle');
+        const vLocation = document.getElementById('vLocation');
+        const vSchedule = document.getElementById('vSchedule');
+
+        const form = document.getElementById('applicationForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successSection = document.getElementById('successSection');
+        const formSection = document.getElementById('formSection');
+        const vacancyInfo = document.getElementById('vacancyInfo');
+
+        const vacancyIdInput = document.getElementById('vacancyId');
+        const vacancyTitleInput = document.getElementById('vacancyTitle');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const ageInput = document.getElementById('age');
+        const experienceInput = document.getElementById('experience');
+        const motivationInput = document.getElementById('motivation');
+        const portfolioInput = document.getElementById('portfolio');
+        const resumeInput = document.getElementById('resume');
+        const additionalInfoInput = document.getElementById('additionalInfo');
+
+        const toast = document.getElementById('toast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        let toastTimeout = null;
+
+        // ===== TOAST =====
+        function showToast(title, message, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // ===== ПОЛУЧЕНИЕ ID ВАКАНСИИ ИЗ URL =====
+        function getVacancyIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // ===== ЗАГРУЗКА ИНФОРМАЦИИ О ВАКАНСИИ =====
+        async function loadVacancyInfo() {
+            const id = getVacancyIdFromUrl();
+            if (!id) {
+                infoLoading.innerHTML = '<p style="color:var(--red);">❌ Не указана вакансия</p>';
+                return;
+            }
+
+            try {
+                const doc = await db.collection('careers').doc(id).get();
+                if (!doc.exists) {
+                    infoLoading.innerHTML = '<p style="color:var(--red);">❌ Вакансия не найдена</p>';
+                    return;
+                }
+
+                const data = doc.data();
+
+                if (data.status === 'soon') {
+                    infoLoading.innerHTML = `
+                        <p style="color:var(--text-tertiary);">
+                            <i class="fas fa-clock" style="color:var(--accent);"></i>
+                            Эта вакансия ещё не открыта для откликов. Следите за обновлениями!
+                        </p>
+                    `;
+                    document.getElementById('formSection').style.display = 'none';
+                    return;
+                }
+
+                // Заполняем информацию
+                vBadge.textContent = 'Открыта';
+                vBadge.className = 'badge';
+                vTitle.textContent = data.title || 'Без названия';
+                vLocation.textContent = data.location || '—';
+                vSchedule.textContent = data.schedule || '—';
+
+                vacancyIdInput.value = id;
+                vacancyTitleInput.value = data.title || '';
+
+                infoLoading.style.display = 'none';
+                infoContent.style.display = 'block';
+
+            } catch (error) {
+                console.error('Ошибка загрузки:', error);
+                infoLoading.innerHTML = '<p style="color:var(--red);">❌ Ошибка загрузки вакансии</p>';
+            }
+        }
+
+        // ===== ОТПРАВКА ЗАЯВКИ =====
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Валидация
+            const name = fullNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const age = ageInput.value.trim();
+            const experience = experienceInput.value.trim();
+            const motivation = motivationInput.value.trim();
+            const resumeFile = resumeInput.files[0];
+
+            if (!name || !email || !age || !experience || !motivation || !resumeFile) {
+                showToast('Ошибка', 'Заполните все обязательные поля', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                showToast('Ошибка', 'Введите корректный email', 'error');
+                return;
+            }
+
+            if (parseInt(age) < 14 || parseInt(age) > 99) {
+                showToast('Ошибка', 'Возраст должен быть от 14 до 99 лет', 'error');
+                return;
+            }
+
+            // Блокируем кнопку
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+
+            try {
+                // 1. Загружаем резюме в Firebase Storage
+                const storageRef = storage.ref();
+                const fileRef = storageRef.child('resumes/' + Date.now() + '_' + resumeFile.name);
+                const uploadTask = await fileRef.put(resumeFile);
+                const resumeUrl = await uploadTask.ref.getDownloadURL();
+
+                // 2. Сохраняем данные в Firestore
+                const applicationData = {
+                    vacancyId: vacancyIdInput.value,
+                    vacancyTitle: vacancyTitleInput.value || 'Не указана',
+                    name: name,
+                    email: email,
+                    age: parseInt(age),
+                    experience: experience,
+                    motivation: motivation,
+                    portfolio: portfolioInput.value.trim() || '',
+                    resumeUrl: resumeUrl,
+                    resumeFileName: resumeFile.name,
+                    additionalInfo: additionalInfoInput.value.trim() || '',
+                    status: 'new',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('applications').add(applicationData);
+
+                // 3. Показываем успех
+                formSection.style.display = 'none';
+                vacancyInfo.style.display = 'none';
+                successSection.classList.add('show');
+
+                showToast('Успешно!', 'Заявка отправлена');
+
+            } catch (error) {
+                console.error('Ошибка отправки:', error);
+                showToast('Ошибка', 'Не удалось отправить заявку. Попробуйте позже.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить заявку';
+            }
+        });
+
+        // ===== ТЕМА =====
+        const THEME_KEY = 'metro_new_theme';
+        const root = document.documentElement;
+
+        function applyTheme(theme) {
+            root.setAttribute('data-theme', theme);
+        }
+
+        function getInitialTheme() {
+            const saved = localStorage.getItem(THEME_KEY);
+            if (saved === 'light' || saved === 'dark') return saved;
+            return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+
+        let currentTheme = getInitialTheme();
+        applyTheme(currentTheme);
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(currentTheme);
+            localStorage.setItem(THEME_KEY, currentTheme);
+        });
+
+        // ===== ЗАПУСК =====
+        document.addEventListener('DOMContentLoaded', function() {
+            loadVacancyInfo();
+        });
+    </script>
+
+</body>
+</html>
