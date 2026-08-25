@@ -13,6 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
+    <!-- ===== EMAILJS ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <!-- ===== FIREBASE ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
@@ -497,7 +500,6 @@
             opacity: 0.6;
         }
 
-        /* ===== ВЫБОР ВРЕМЕНИ ===== */
         .time-selector {
             display: flex;
             flex-wrap: wrap;
@@ -562,6 +564,20 @@
         .custom-time-input input:focus {
             outline: none;
             border-color: var(--accent);
+        }
+
+        .selected-display {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .selected-display strong {
+            color: var(--accent);
         }
 
         /* ===== КРАСИВЫЙ SELECT ===== */
@@ -939,18 +955,19 @@
             display: block;
         }
 
-        .selected-display {
-            padding: 12px 16px;
-            background: var(--bg-primary);
-            border-radius: var(--radius);
-            margin-top: 12px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
+        .parent-email-info {
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
         }
 
-        .selected-display strong {
+        .parent-email-info i {
             color: var(--accent);
+            margin-right: 6px;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1198,14 +1215,11 @@
                     <input type="hidden" id="selectedDateTime" value="" required data-progress />
 
                     <div class="calendar-wrapper">
-                        <!-- Заголовок -->
                         <div class="calendar-header">
                             <button class="nav-btn" id="prevMonth"><i class="fas fa-chevron-left"></i></button>
                             <span class="month-year" id="monthYear">Март 2025</span>
                             <button class="nav-btn" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
                         </div>
-
-                        <!-- Дни недели -->
                         <div class="calendar-days">
                             <div>Пн</div>
                             <div>Вт</div>
@@ -1215,11 +1229,7 @@
                             <div>Сб</div>
                             <div>Вс</div>
                         </div>
-
-                        <!-- Даты -->
                         <div class="calendar-dates" id="calendarDates"></div>
-
-                        <!-- Выбор времени -->
                         <div class="time-selector" id="timeSelector">
                             <button class="time-btn" data-time="10:00">🌅 10:00</button>
                             <button class="time-btn" data-time="12:00">☀️ 12:00</button>
@@ -1229,14 +1239,11 @@
                             <button class="time-btn" data-time="20:00">🌙 20:00</button>
                             <button class="time-btn custom-time-btn" id="customTimeBtn">✏️ Своё</button>
                         </div>
-
-                        <!-- Своё время -->
                         <div class="custom-time-input" id="customTimeInput">
                             <input type="date" id="customDate" />
                             <input type="time" id="customTime" />
                         </div>
                     </div>
-
                     <div class="selected-display" id="selectedDisplay">
                         Выбрано: <strong id="selectedText">—</strong>
                     </div>
@@ -1274,15 +1281,21 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="guardianContact">Email родителя <span class="required">*</span></label>
+                            <label for="guardianEmail">Email родителя <span class="required">*</span></label>
                             <div class="input-with-icon">
-                                <input type="email" id="guardianContact" placeholder="roditel@mail.ru" data-progress />
+                                <input type="email" id="guardianEmail" placeholder="roditel@mail.ru" data-progress />
                                 <span class="input-icon"><i class="fas fa-envelope"></i></span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="checkbox-group">
+                    <div class="parent-email-info">
+                        <i class="fas fa-info-circle"></i>
+                        На указанный email родителя будет отправлено письмо с запросом согласия на участие в проекте.
+                        <a href="https://kirill12633.github.io/careers.metro.new/policy/minors" target="_blank" style="color:var(--accent);">Подробнее о политике</a>
+                    </div>
+
+                    <div class="checkbox-group" style="margin-top:12px;">
                         <input type="checkbox" id="guardianConsent" data-progress />
                         <label for="guardianConsent">
                             Я являюсь родителем/законным представителем указанного несовершеннолетнего и даю согласие на его участие в проекте, а также на обработку его персональных данных согласно <a href="https://kirill12633.github.io/Metro.New.Official/ru/help/privacy-policy/" target="_blank">политике конфиденциальности</a> <span class="required">*</span>
@@ -1428,8 +1441,17 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // ===== НАСТРОЙКА FORMSUBMIT =====
-        const FORMSUBMIT_ENDPOINT = "https://formsubmit.co/ajax/metro.new.help@gmail.com";
+        // ===== EMAILJS CONFIG =====
+        // ⚠️ ВСТАВЬТЕ СВОИ ДАННЫЕ ИЗ EMAILJS:
+        const EMAILJS_CONFIG = {
+            serviceId: "service_XXXXXXX", // ID вашего сервиса
+            templateApplication: "template_XXXXXXX", // ID шаблона для заявки
+            templateParent: "template_XXXXXXX", // ID шаблона для родителей
+            publicKey: "XXXXXXXXXXXXXXXX" // Ваш публичный ключ
+        };
+
+        // Инициализация EmailJS
+        emailjs.init(EMAILJS_CONFIG.publicKey);
 
         // ===== DOM ЭЛЕМЕНТЫ =====
         const infoLoading = document.getElementById('infoLoading');
@@ -1458,7 +1480,7 @@
 
         const guardianBlock = document.getElementById('guardianBlock');
         const guardianNameInput = document.getElementById('guardianName');
-        const guardianContactInput = document.getElementById('guardianContact');
+        const guardianEmailInput = document.getElementById('guardianEmail');
         const guardianConsentCheckbox = document.getElementById('guardianConsent');
 
         const consentPolicy = document.getElementById('consentPolicy');
@@ -1493,6 +1515,8 @@
         let currentYear = currentDate.getFullYear();
         let selectedDate = null;
         let selectedTime = null;
+        let vacancyTitle = '';
+        let recaptchaVerified = false;
 
         // ===== ОТКРЫТИЕ/ЗАКРЫТИЕ МОДАЛКИ СОГЛАСИЯ =====
         function openConsentModal() {
@@ -1587,13 +1611,11 @@
             let html = '';
             const firstDayIndex = firstDay === 0 ? 6 : firstDay - 1;
 
-            // Дни предыдущего месяца
             for (let i = firstDayIndex - 1; i >= 0; i--) {
                 const day = daysInPrevMonth - i;
                 html += `<div class="day other-month">${day}</div>`;
             }
 
-            // Дни текущего месяца
             const today = new Date();
             const isTodayMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
             const todayDate = today.getDate();
@@ -1613,7 +1635,6 @@
                 html += `<div class="${classes}" data-day="${d}">${d}</div>`;
             }
 
-            // Дни следующего месяца для заполнения
             const totalDays = firstDayIndex + daysInMonth;
             const remaining = 42 - totalDays;
             for (let d = 1; d <= remaining; d++) {
@@ -1622,7 +1643,6 @@
 
             calendarDates.innerHTML = html;
 
-            // Обработчики на дни
             document.querySelectorAll('.calendar-dates .day:not(.other-month)').forEach(el => {
                 el.addEventListener('click', function() {
                     const day = parseInt(this.dataset.day);
@@ -1673,7 +1693,7 @@
             }
         }
 
-        // ===== ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ ВЫБРАННОГО =====
+        // ===== ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ =====
         function updateSelectedDisplay() {
             let text = '—';
             if (selectedDate && selectedTime) {
@@ -1692,7 +1712,6 @@
             }
             selectedText.textContent = text;
 
-            // Обновляем подсветку дней с выбранным временем
             document.querySelectorAll('.calendar-dates .day').forEach(el => {
                 if (selectedTime && !el.classList.contains('other-month')) {
                     el.classList.add('has-time');
@@ -1702,7 +1721,7 @@
             });
         }
 
-        // ===== НАВИГАЦИЯ ПО МЕСЯЦАМ =====
+        // ===== НАВИГАЦИЯ =====
         prevMonthBtn.addEventListener('click', function() {
             currentMonth--;
             if (currentMonth < 0) {
@@ -1745,12 +1764,12 @@
             if (isMinor()) {
                 guardianBlock.classList.add('active');
                 guardianNameInput.required = true;
-                guardianContactInput.required = true;
+                guardianEmailInput.required = true;
                 guardianConsentCheckbox.required = true;
             } else {
                 guardianBlock.classList.remove('active');
                 guardianNameInput.required = false;
-                guardianContactInput.required = false;
+                guardianEmailInput.required = false;
                 guardianConsentCheckbox.required = false;
             }
             updateProgress();
@@ -1776,7 +1795,7 @@
             ];
 
             if (isMinor()) {
-                fields.push(guardianNameInput, guardianContactInput, guardianConsentCheckbox);
+                fields.push(guardianNameInput, guardianEmailInput, guardianConsentCheckbox);
             }
 
             let filled = 0;
@@ -1827,7 +1846,7 @@
             recaptchaVerified = false;
         }
 
-        // ===== ОТПРАВКА =====
+        // ===== ОТПРАВКА ЧЕРЕЗ EMAILJS =====
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             hideError();
@@ -1877,7 +1896,6 @@
                 return;
             }
 
-            // Проверка капчи
             const recaptchaResponse = grecaptcha.getResponse();
             if (!recaptchaResponse) {
                 showError('Пожалуйста, подтвердите, что вы не робот.');
@@ -1885,11 +1903,15 @@
             }
 
             const guardianName = guardianNameInput.value.trim();
-            const guardianContact = guardianContactInput.value.trim();
+            const guardianEmail = guardianEmailInput.value.trim();
 
             if (isMinor()) {
-                if (!guardianName || !guardianContact) {
+                if (!guardianName || !guardianEmail) {
                     showError('Для соискателей младше 18 лет нужно указать данные родителя/опекуна.');
+                    return;
+                }
+                if (!guardianEmail.includes('@')) {
+                    showError('Введите корректный email родителя.');
                     return;
                 }
                 if (!guardianConsentCheckbox.checked) {
@@ -1906,45 +1928,51 @@
             const portfolio = portfolioInput.value.trim() || 'Не указано';
             const additional = additionalInput.value.trim() || 'Не указано';
 
-            const payload = {
-                _subject: `Заявка на вакансию: ${vacancyTitle}`,
-                "Вакансия": vacancyTitle,
-                "Имя": name,
-                "Email": email,
-                "Возраст": age,
-                "Несовершеннолетний": isMinor() ? 'Да' : 'Нет',
-                "Опыт работы": experience,
-                "Мотивация": motivation,
-                "Языки": languageDisplay,
-                "Желаемый график": schedule,
-                "Зарплатные ожидания": `${salary} Robux`,
-                "Удобное время собеседования": datetime,
-                "Портфолио": portfolio,
-                "Дополнительная информация": additional,
-                "Согласие с политикой и правилами": consentPolicy.checked ? 'Да' : 'Нет',
-                "Согласие на обработку данных": consentData.checked ? 'Да' : 'Нет',
-                "Согласие на получение сообщений": consentContact.checked ? 'Да' : 'Нет',
-                "g-recaptcha-response": recaptchaResponse
-            };
-
-            if (isMinor()) {
-                payload["Имя родителя/опекуна"] = guardianName;
-                payload["Email родителя/опекуна"] = guardianContact;
-                payload["Согласие родителя/опекуна"] = guardianConsentCheckbox.checked ? 'Да' : 'Нет';
-            }
-
             try {
-                const response = await fetch(FORMSUBMIT_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
+                // ===== 1. ОТПРАВКА ЗАЯВКИ =====
+                const applicationData = {
+                    vacancy: vacancyTitle,
+                    name: name,
+                    email: email,
+                    age: age,
+                    is_minor: isMinor() ? 'Да' : 'Нет',
+                    experience: experience,
+                    motivation: motivation,
+                    languages: languageDisplay,
+                    schedule: schedule,
+                    salary: salary + ' Robux',
+                    interview_time: datetime,
+                    portfolio: portfolio,
+                    additional: additional,
+                    consent_policy: consentPolicy.checked ? '✅ Да' : '❌ Нет',
+                    consent_data: consentData.checked ? '✅ Да' : '❌ Нет',
+                    consent_contact: consentContact.checked ? '✅ Да' : '❌ Нет',
+                    guardian_name: isMinor() ? guardianName : '—',
+                    guardian_contact: isMinor() ? guardianEmail : '—',
+                    guardian_consent: isMinor() ? (guardianConsentCheckbox.checked ? '✅ Да' : '❌ Нет') : '—'
+                };
 
-                if (!response.ok) {
-                    throw new Error('Ошибка сервера: ' + response.status);
+                await emailjs.send(
+                    EMAILJS_CONFIG.serviceId,
+                    EMAILJS_CONFIG.templateApplication,
+                    applicationData
+                );
+
+                // ===== 2. ОТПРАВКА ПИСЬМА РОДИТЕЛЯМ (если несовершеннолетний) =====
+                if (isMinor()) {
+                    const parentData = {
+                        parent_name: guardianName,
+                        child_name: name,
+                        child_age: age,
+                        vacancy: vacancyTitle,
+                        parent_email: guardianEmail
+                    };
+
+                    await emailjs.send(
+                        EMAILJS_CONFIG.serviceId,
+                        EMAILJS_CONFIG.templateParent,
+                        parentData
+                    );
                 }
 
                 successOverlay.classList.add('active');
@@ -2017,7 +2045,6 @@
             loadVacancyInfo();
             renderCalendar();
             updateProgress();
-            // Устанавливаем сегодняшнюю дату по умолчанию для календаря
             const today = new Date();
             selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             renderCalendar();
