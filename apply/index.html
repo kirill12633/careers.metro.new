@@ -10,21 +10,17 @@
     <link rel="apple-touch-icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" />
 
     <!-- ===== ШРИФТЫ ===== -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <!-- ===== EMAILJS ===== -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <!-- ===== FIREBASE ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-    <!-- ===== GOOGLE reCAPTCHA v2 ===== -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-
     <style>
-        /* ===== ПЕРЕМЕННЫЕ ===== */
+        /* ============================================================
+                   ROOT VARIABLES — СТИЛЬ САЙТА
+                   ============================================================ */
         :root {
             --radius: 12px;
             --radius-lg: 16px;
@@ -33,20 +29,28 @@
             --bg-secondary: #131c33;
             --bg-card: #182444;
             --bg-card-hover: #1d2b4f;
+            --bg-elevated: #23325c;
             --text-primary: #f2f4fa;
             --text-secondary: #a6b0cc;
             --text-tertiary: #77819e;
+            --text-disabled: #4a5473;
             --accent: #FFD700;
             --accent-hover: #ffe14d;
-            --accent-light: rgba(255, 215, 0, 0.15);
+            --accent-light: rgba(255, 215, 0, 0.12);
             --accent-glow: rgba(255, 215, 0, 0.2);
+            --blue: #4d94ff;
+            --blue-hover: #7aacff;
             --green: #34a853;
             --green-light: rgba(52, 168, 83, 0.15);
             --red: #f28b82;
             --red-light: rgba(242, 139, 130, 0.15);
             --border: #253460;
+            --border-light: #1d2b4f;
             --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+            --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.7);
+            --scrollbar-thumb: #2d3d6b;
+            --scrollbar-track: transparent;
             color-scheme: dark;
         }
 
@@ -55,20 +59,28 @@
             --bg-secondary: #f4f6fb;
             --bg-card: #ffffff;
             --bg-card-hover: #eef1f9;
+            --bg-elevated: #ffffff;
             --text-primary: #14151f;
             --text-secondary: #565f7a;
             --text-tertiary: #8890a8;
+            --text-disabled: #c3c8d6;
             --accent: #e6c200;
             --accent-hover: #c2a300;
             --accent-light: rgba(230, 194, 0, 0.12);
             --accent-glow: rgba(230, 194, 0, 0.18);
+            --blue: #0066CC;
+            --blue-hover: #0052a3;
             --green: #1e8e4e;
             --green-light: rgba(30, 142, 78, 0.1);
             --red: #d93025;
             --red-light: rgba(217, 48, 37, 0.1);
             --border: #e2e6f0;
+            --border-light: #eef1f9;
             --shadow: 0 8px 30px rgba(20, 22, 40, 0.1);
             --shadow-lg: 0 16px 40px rgba(20, 22, 40, 0.12);
+            --shadow-xl: 0 24px 60px rgba(20, 22, 40, 0.16);
+            --scrollbar-thumb: #d1d6e6;
+            --scrollbar-track: transparent;
             color-scheme: light;
         }
 
@@ -78,12 +90,18 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             transition: background-color 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(ellipse at 20% 30%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, color-mix(in srgb, var(--blue) 7%, transparent) 0%, transparent 60%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -590,14 +608,6 @@
             cursor: pointer;
         }
 
-        /* ===== CAPTCHA ===== */
-        .captcha-wrapper {
-            display: flex;
-            justify-content: center;
-            margin: 8px 0 4px;
-            min-height: 78px;
-        }
-
         /* ===== БЛОК ОПЕКУНА ===== */
         .guardian-block {
             display: none;
@@ -633,6 +643,21 @@
             margin-bottom: 18px;
         }
 
+        .parent-email-info {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin: 8px 0 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .parent-email-info i {
+            color: var(--accent);
+            margin-right: 6px;
+        }
+
         /* ===== БЛОК СОГЛАСИЙ ===== */
         .consents-block {
             background: var(--bg-secondary);
@@ -651,137 +676,6 @@
 
         .consents-block .checkbox-group {
             margin: 6px 0;
-        }
-
-        /* ===== МОДАЛЬНОЕ ОКНО СОГЛАСИЯ ===== */
-        .consent-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 9998;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .consent-modal-overlay.active {
-            display: flex;
-        }
-
-        .consent-modal {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            max-width: 600px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 40px;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .consent-modal::-webkit-scrollbar {
-            width: 4px;
-        }
-        .consent-modal::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 8px;
-        }
-
-        .consent-modal .modal-close {
-            position: sticky;
-            top: 0;
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s;
-            z-index: 10;
-        }
-
-        .consent-modal .modal-close:hover {
-            color: var(--accent);
-        }
-
-        .consent-modal .modal-icon {
-            text-align: center;
-            font-size: 2.5rem;
-            color: var(--accent);
-            margin-bottom: 12px;
-        }
-
-        .consent-modal h2 {
-            font-size: 1.6rem;
-            text-align: center;
-            margin-bottom: 8px;
-        }
-
-        .consent-modal .modal-subtitle {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-
-        .consent-modal .consent-section {
-            margin: 16px 0;
-            padding: 16px;
-            background: var(--bg-secondary);
-            border-radius: var(--radius);
-            border-left: 3px solid var(--accent);
-        }
-
-        .consent-modal .consent-section h4 {
-            color: var(--accent);
-            font-size: 0.95rem;
-            margin-bottom: 6px;
-        }
-
-        .consent-modal .consent-section p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.7;
-        }
-
-        .consent-modal .consent-section ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 6px;
-        }
-
-        .consent-modal .consent-section ul li {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            padding: 3px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .consent-modal .consent-section ul li::before {
-            content: "•";
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .consent-modal .modal-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-top: 24px;
-            flex-wrap: wrap;
         }
 
         /* ===== CHECKBOX ===== */
@@ -847,32 +741,6 @@
             background: linear-gradient(90deg, var(--accent), var(--accent-hover));
             border-radius: 8px;
             transition: width 0.5s ease;
-        }
-
-        /* ===== АНИМАЦИЯ ОТПРАВКИ ===== */
-        .btn-loading {
-            position: relative;
-            pointer-events: none;
-        }
-
-        .btn-loading .btn-text {
-            visibility: hidden;
-        }
-
-        .btn-loading .spinner {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #0d1526;
-        }
-
-        .btn-loading .spinner i {
-            font-size: 1.2rem;
-            animation: spin 0.8s linear infinite;
         }
 
         /* ===== SUCCESS OVERLAY ===== */
@@ -955,21 +823,6 @@
             display: block;
         }
 
-        .parent-email-info {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin-top: 8px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .parent-email-info i {
-            color: var(--accent);
-            margin-right: 6px;
-        }
-
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .form-row {
@@ -991,9 +844,6 @@
             .success-modal {
                 padding: 30px 20px;
             }
-            .consent-modal {
-                padding: 24px;
-            }
             .calendar-dates .day {
                 padding: 8px 0;
                 font-size: 0.8rem;
@@ -1010,12 +860,6 @@
             .form-actions .btn {
                 width: 100%;
                 justify-content: center;
-            }
-            .consent-modal {
-                padding: 18px;
-            }
-            .consent-modal h2 {
-                font-size: 1.3rem;
             }
             .time-selector .time-btn {
                 padding: 4px 12px;
@@ -1075,7 +919,6 @@
                 <span id="errorBannerText">Не удалось отправить заявку. Попробуйте ещё раз.</span>
             </div>
 
-            <!-- ===== PROGRESS BAR ===== -->
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Заполнение анкеты</span>
@@ -1087,9 +930,10 @@
             </div>
 
             <form id="applicationForm">
-                <input type="hidden" id="vacancyTitleInput" value="" />
 
-                <!-- ===== ОСНОВНЫЕ ПОЛЯ ===== -->
+                <input type="hidden" id="vacancyTitleInput" value="" />
+                <input type="hidden" id="vacancyIdInput" value="" />
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="fullName">Имя <span class="required">*</span></label>
@@ -1137,7 +981,6 @@
                     <p style="color:var(--text-secondary); font-size:0.9rem;"><i class="fas fa-arrow-down" style="color:var(--accent);"></i> Дополнительная информация</p>
                 </div>
 
-                <!-- ===== ЯЗЫКИ ===== -->
                 <div class="form-group">
                     <label for="languages">Языки <span class="required">*</span></label>
                     <div class="input-with-icon">
@@ -1175,7 +1018,6 @@
                     </div>
                 </div>
 
-                <!-- ===== ГРАФИК ===== -->
                 <div class="form-group">
                     <label for="schedulePreference">Желаемый график <span class="required">*</span></label>
                     <div class="input-with-icon">
@@ -1197,7 +1039,6 @@
                     </div>
                 </div>
 
-                <!-- ===== ЗАРПЛАТА ===== -->
                 <div class="form-group">
                     <label for="salaryExpectations">Зарплатные ожидания <span class="required">*</span></label>
                     <div class="input-with-icon">
@@ -1221,13 +1062,7 @@
                             <button class="nav-btn" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
                         </div>
                         <div class="calendar-days">
-                            <div>Пн</div>
-                            <div>Вт</div>
-                            <div>Ср</div>
-                            <div>Чт</div>
-                            <div>Пт</div>
-                            <div>Сб</div>
-                            <div>Вс</div>
+                            <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                         </div>
                         <div class="calendar-dates" id="calendarDates"></div>
                         <div class="time-selector" id="timeSelector">
@@ -1329,15 +1164,8 @@
                     </div>
                 </div>
 
-                <!-- ===== CAPTCHA ===== -->
-                <div class="form-group" style="margin-top:20px;">
-                    <div class="captcha-wrapper">
-                        <div class="g-recaptcha" data-sitekey="6Lfr5g0sAAAAANmMqIPHhQ6pvNa3YnVcXs3A4eR2"></div>
-                    </div>
-                </div>
-
                 <!-- ===== КНОПКИ ===== -->
-                <div class="form-actions" style="margin-top:16px;">
+                <div class="form-actions" style="margin-top:24px;">
                     <button type="submit" class="btn btn-green" id="submitBtn">
                         <span class="btn-text"><i class="fas fa-paper-plane"></i> Отправить заявку</span>
                         <span class="spinner" style="display:none;">
@@ -1354,55 +1182,54 @@
     </div>
 
     <!-- ===== МОДАЛЬНОЕ ОКНО СОГЛАСИЯ ===== -->
-    <div class="consent-modal-overlay" id="consentModalOverlay">
-        <div class="consent-modal">
-            <button class="modal-close" onclick="closeConsentModal()">
+    <div class="consent-modal-overlay" id="consentModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:9998; justify-content:center; align-items:center; padding:20px; animation:fadeIn 0.3s ease;">
+        <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-xl); max-width:600px; width:100%; max-height:90vh; overflow-y:auto; padding:40px; box-shadow:var(--shadow-lg); position:relative; animation:slideUp 0.4s ease;">
+            <button onclick="closeConsentModal()" style="position:sticky; top:0; float:right; background:none; border:none; color:var(--text-secondary); font-size:1.5rem; cursor:pointer; z-index:10;">
                 <i class="fas fa-times"></i>
             </button>
+            <div style="text-align:center; font-size:2.5rem; color:var(--accent); margin-bottom:12px;"><i class="fas fa-shield-alt"></i></div>
+            <h2 style="text-align:center; font-size:1.6rem; margin-bottom:8px;">Согласие на обработку персональных данных</h2>
+            <p style="text-align:center; color:var(--text-secondary); font-size:0.95rem; margin-bottom:20px;">Пожалуйста, ознакомьтесь с информацией о том, как мы обрабатываем ваши данные</p>
 
-            <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
-            <h2>Согласие на обработку персональных данных</h2>
-            <p class="modal-subtitle">Пожалуйста, ознакомьтесь с информацией о том, как мы обрабатываем ваши данные</p>
-
-            <div class="consent-section">
-                <h4>📋 Какие данные мы собираем</h4>
-                <ul>
-                    <li>Имя, Email, Возраст</li>
-                    <li>Опыт работы и мотивация</li>
-                    <li>Языки, график работы, зарплатные ожидания</li>
-                    <li>Удобное время для собеседования</li>
-                    <li>Ссылка на портфолио (если указана)</li>
-                    <li>Дополнительная информация (если указана)</li>
-                    <li>Данные родителя/опекуна (для несовершеннолетних)</li>
+            <div style="margin:16px 0; padding:16px; background:var(--bg-secondary); border-radius:var(--radius); border-left:3px solid var(--accent);">
+                <h4 style="color:var(--accent); font-size:0.95rem; margin-bottom:6px;">📋 Какие данные мы собираем</h4>
+                <ul style="list-style:none; padding:0; margin-top:6px;">
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Имя, Email, Возраст</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Опыт работы и мотивация</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Языки, график работы, зарплатные ожидания</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Удобное время для собеседования</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Ссылка на портфолио (если указана)</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Дополнительная информация (если указана)</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Данные родителя/опекуна (для несовершеннолетних)</li>
                 </ul>
             </div>
 
-            <div class="consent-section">
-                <h4>🎯 Для чего мы используем ваши данные</h4>
-                <ul>
-                    <li>Для рассмотрения вашей заявки на вакансию</li>
-                    <li>Для связи с вами по вопросам собеседования</li>
-                    <li>Для отправки уведомлений о статусе заявки</li>
-                    <li>Для улучшения нашего процесса подбора</li>
+            <div style="margin:16px 0; padding:16px; background:var(--bg-secondary); border-radius:var(--radius); border-left:3px solid var(--accent);">
+                <h4 style="color:var(--accent); font-size:0.95rem; margin-bottom:6px;">🎯 Для чего мы используем ваши данные</h4>
+                <ul style="list-style:none; padding:0; margin-top:6px;">
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Для рассмотрения вашей заявки на вакансию</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Для связи с вами по вопросам собеседования</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Для отправки уведомлений о статусе заявки</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Для улучшения нашего процесса подбора</li>
                 </ul>
             </div>
 
-            <div class="consent-section">
-                <h4>🔒 Как мы защищаем ваши данные</h4>
-                <ul>
-                    <li>Ваши данные хранятся в зашифрованном виде</li>
-                    <li>Доступ к данным имеют только ответственные сотрудники</li>
-                    <li>Мы не передаём ваши данные третьим лицам</li>
-                    <li>Вы можете запросить удаление своих данных в любое время</li>
+            <div style="margin:16px 0; padding:16px; background:var(--bg-secondary); border-radius:var(--radius); border-left:3px solid var(--accent);">
+                <h4 style="color:var(--accent); font-size:0.95rem; margin-bottom:6px;">🔒 Как мы защищаем ваши данные</h4>
+                <ul style="list-style:none; padding:0; margin-top:6px;">
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Ваши данные хранятся в зашифрованном виде</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Доступ к данным имеют только ответственные сотрудники</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Мы не передаём ваши данные третьим лицам</li>
+                    <li style="color:var(--text-secondary); font-size:0.85rem; padding:3px 0; display:flex; align-items:flex-start; gap:8px;">• Вы можете запросить удаление своих данных в любое время</li>
                 </ul>
             </div>
 
-            <div class="consent-section">
-                <h4>⏳ Срок хранения данных</h4>
-                <p>Ваши данные хранятся в течение 1 года с момента подачи заявки. По истечении этого срока они будут автоматически удалены.</p>
+            <div style="margin:16px 0; padding:16px; background:var(--bg-secondary); border-radius:var(--radius); border-left:3px solid var(--accent);">
+                <h4 style="color:var(--accent); font-size:0.95rem; margin-bottom:6px;">⏳ Срок хранения данных</h4>
+                <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.7;">Ваши данные хранятся в течение 1 года с момента подачи заявки. По истечении этого срока они будут автоматически удалены.</p>
             </div>
 
-            <div class="modal-actions">
+            <div style="display:flex; gap:12px; justify-content:center; margin-top:24px; flex-wrap:wrap;">
                 <button class="btn btn-primary" onclick="closeConsentModal()">
                     <i class="fas fa-check"></i> Я ознакомлен(а) и согласен(на)
                 </button>
@@ -1413,13 +1240,11 @@
     <!-- ===== SUCCESS OVERLAY ===== -->
     <div class="success-overlay" id="successOverlay">
         <div class="success-modal">
-            <div class="check-icon">
-                <i class="fas fa-check"></i>
-            </div>
+            <div class="check-icon"><i class="fas fa-check"></i></div>
             <h2>Заявка отправлена! 🎉</h2>
             <p>Мы получили вашу анкету и свяжемся с вами в ближайшее время.</p>
             <button class="btn btn-primary" onclick="closeSuccess()">
-                <i class="fas fa-arrow-left"></i> Вернуться
+                <i class="fas fa-arrow-left"></i> Вернуться к вакансиям
             </button>
         </div>
     </div>
@@ -1437,20 +1262,8 @@
             messagingSenderId: "769002010414",
             appId: "1:769002010414:web:bdeb93a7eddc4cab63ecbf"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-
-        // ===== EMAILJS CONFIG =====
-        const EMAILJS_CONFIG = {
-            serviceId: "service_wmb3jym",
-            templateApplication: "template_k4n4o5k",
-            templateParent: "template_toohaj8",
-            publicKey: "UO3RV5cAt1ujKWDPh"
-        };
-
-        // Инициализация EmailJS
-        emailjs.init(EMAILJS_CONFIG.publicKey);
 
         // ===== DOM ЭЛЕМЕНТЫ =====
         const infoLoading = document.getElementById('infoLoading');
@@ -1463,6 +1276,7 @@
         const formSection = document.getElementById('formSection');
 
         const vacancyTitleInput = document.getElementById('vacancyTitleInput');
+        const vacancyIdInput = document.getElementById('vacancyIdInput');
         const fullNameInput = document.getElementById('fullName');
         const emailInput = document.getElementById('email');
         const ageInput = document.getElementById('age');
@@ -1495,8 +1309,6 @@
         const errorBanner = document.getElementById('errorBanner');
         const errorBannerText = document.getElementById('errorBannerText');
 
-        const consentModalOverlay = document.getElementById('consentModalOverlay');
-
         // ===== КАЛЕНДАРЬ =====
         const monthYear = document.getElementById('monthYear');
         const calendarDates = document.getElementById('calendarDates');
@@ -1515,40 +1327,15 @@
         let selectedDate = null;
         let selectedTime = null;
         let vacancyTitle = '';
-        let recaptchaVerified = false;
 
-        // ===== ОТКРЫТИЕ/ЗАКРЫТИЕ МОДАЛКИ СОГЛАСИЯ =====
-        function openConsentModal() {
-            consentModalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeConsentModal() {
-            consentModalOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-            consentData.checked = true;
-            updateProgress();
-        }
-
-        consentModalOverlay.addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeConsentModal();
-            }
-        });
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeConsentModal();
-            }
-        });
-
-        // ===== ПОЛУЧЕНИЕ ID =====
+        // ============================================================
+        // ===== ЗАГРУЗКА ВАКАНСИИ =====
+        // ============================================================
         function getVacancyIdFromUrl() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id');
         }
 
-        // ===== ЗАГРУЗКА ВАКАНСИИ =====
         async function loadVacancyInfo() {
             const id = getVacancyIdFromUrl();
             if (!id) {
@@ -1586,6 +1373,7 @@
                 vTitle.textContent = vacancyTitle;
                 vLocation.textContent = data.location || '—';
                 vSchedule.textContent = data.schedule || '—';
+                vacancyIdInput.value = id;
                 vacancyTitleInput.value = vacancyTitle;
 
                 infoLoading.style.display = 'none';
@@ -1598,7 +1386,9 @@
             }
         }
 
-        // ===== РЕНДЕР КАЛЕНДАРЯ =====
+        // ============================================================
+        // ===== КАЛЕНДАРЬ =====
+        // ============================================================
         function renderCalendar() {
             const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
             monthYear.textContent = months[currentMonth] + ' ' + currentYear;
@@ -1621,16 +1411,10 @@
 
             for (let d = 1; d <= daysInMonth; d++) {
                 let classes = 'day';
-                if (isTodayMonth && d === todayDate) {
-                    classes += ' today';
-                }
+                if (isTodayMonth && d === todayDate) classes += ' today';
                 if (selectedDate && d === selectedDate && currentMonth === selectedDate.getMonth() && currentYear === selectedDate
-                    .getFullYear()) {
-                    classes += ' active';
-                }
-                if (selectedTime) {
-                    classes += ' has-time';
-                }
+                    .getFullYear()) classes += ' active';
+                if (selectedTime) classes += ' has-time';
                 html += `<div class="${classes}" data-day="${d}">${d}</div>`;
             }
 
@@ -1692,7 +1476,6 @@
             }
         }
 
-        // ===== ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ =====
         function updateSelectedDisplay() {
             let text = '—';
             if (selectedDate && selectedTime) {
@@ -1723,25 +1506,23 @@
         // ===== НАВИГАЦИЯ =====
         prevMonthBtn.addEventListener('click', function() {
             currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
+            if (currentMonth < 0) { currentMonth = 11;
+                currentYear--; }
             renderCalendar();
             updateSelectedDisplay();
         });
 
         nextMonthBtn.addEventListener('click', function() {
             currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
+            if (currentMonth > 11) { currentMonth = 0;
+                currentYear++; }
             renderCalendar();
             updateSelectedDisplay();
         });
 
+        // ============================================================
         // ===== ЯЗЫКИ =====
+        // ============================================================
         languagesSelect.addEventListener('change', function() {
             if (this.value === 'other') {
                 otherLanguageGroup.style.display = 'block';
@@ -1753,7 +1534,9 @@
             updateProgress();
         });
 
+        // ============================================================
         // ===== ОПЕКУН =====
+        // ============================================================
         function isMinor() {
             const age = parseInt(ageInput.value, 10);
             return !isNaN(age) && age > 0 && age < 18;
@@ -1776,23 +1559,15 @@
 
         ageInput.addEventListener('input', updateGuardianBlock);
 
+        // ============================================================
         // ===== ПРОГРЕСС =====
+        // ============================================================
         function updateProgress() {
             const fields = [
-                fullNameInput,
-                emailInput,
-                ageInput,
-                experienceInput,
-                motivationInput,
-                languagesSelect,
-                scheduleSelect,
-                salaryInput,
-                selectedDateTimeInput,
-                consentPolicy,
-                consentData,
-                consentContact
+                fullNameInput, emailInput, ageInput, experienceInput, motivationInput,
+                languagesSelect, scheduleSelect, salaryInput, selectedDateTimeInput,
+                consentPolicy, consentData, consentContact
             ];
-
             if (isMinor()) {
                 fields.push(guardianNameInput, guardianEmailInput, guardianConsentCheckbox);
             }
@@ -1812,9 +1587,7 @@
                 }
             });
 
-            if (languagesSelect.value === 'other' && otherLanguageInput.value.trim()) {
-                filled++;
-            }
+            if (languagesSelect.value === 'other' && otherLanguageInput.value.trim()) filled++;
 
             const percent = Math.min(Math.round((filled / total) * 100), 100);
             progressFill.style.width = percent + '%';
@@ -1826,30 +1599,30 @@
             el.addEventListener('change', updateProgress);
         });
 
-        function showError(message) {
-            errorBannerText.textContent = message;
-            errorBanner.classList.add('active');
-            errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // ============================================================
+        // ===== МОДАЛКА СОГЛАСИЯ =====
+        // ============================================================
+        const consentModalOverlay = document.getElementById('consentModalOverlay');
+
+        function openConsentModal() {
+            consentModalOverlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
         }
 
-        function hideError() {
-            errorBanner.classList.remove('active');
+        function closeConsentModal() {
+            consentModalOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+            consentData.checked = true;
+            updateProgress();
         }
 
-        // ===== CAPTCHA CALLBACK =====
-        function onRecaptchaSuccess() {
-            recaptchaVerified = true;
-        }
-
-        function onRecaptchaExpired() {
-            recaptchaVerified = false;
-        }
-
-        // ===== ОТПРАВКА ЧЕРЕЗ EMAILJS =====
-        form.addEventListener('submit', async function(e) {
+        // ============================================================
+        // ===== ОТПРАВКА ЧЕРЕЗ FORMSUBMIT =====
+        // ============================================================
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
-            hideError();
 
+            // Валидация
             const name = fullNameInput.value.trim();
             const email = emailInput.value.trim();
             const age = ageInput.value.trim();
@@ -1866,38 +1639,38 @@
             }
 
             if (!name || !email || !age || !experience || !motivation || !languages || !schedule || !salary || !datetime) {
-                showError('Заполните все обязательные поля.');
+                errorBannerText.textContent = 'Заполните все обязательные поля.';
+                errorBanner.classList.add('active');
                 return;
             }
 
             if (!email.includes('@')) {
-                showError('Введите корректный email.');
+                errorBannerText.textContent = 'Введите корректный email.';
+                errorBanner.classList.add('active');
                 return;
             }
 
             if (parseInt(age) < 11 || parseInt(age) > 99) {
-                showError('Возраст должен быть от 11 до 99 лет.');
+                errorBannerText.textContent = 'Возраст должен быть от 11 до 99 лет.';
+                errorBanner.classList.add('active');
                 return;
             }
 
             if (!consentPolicy.checked) {
-                showError('Необходимо согласие с политикой конфиденциальности, пользовательским соглашением и правилами сайта.');
+                errorBannerText.textContent = 'Необходимо согласие с политикой конфиденциальности, пользовательским соглашением и правилами сайта.';
+                errorBanner.classList.add('active');
                 return;
             }
 
             if (!consentData.checked) {
-                showError('Необходимо дать согласие на обработку персональных данных.');
+                errorBannerText.textContent = 'Необходимо дать согласие на обработку персональных данных.';
+                errorBanner.classList.add('active');
                 return;
             }
 
             if (!consentContact.checked) {
-                showError('Необходимо согласие на получение сообщений по Email.');
-                return;
-            }
-
-            const recaptchaResponse = grecaptcha.getResponse();
-            if (!recaptchaResponse) {
-                showError('Пожалуйста, подтвердите, что вы не робот.');
+                errorBannerText.textContent = 'Необходимо согласие на получение сообщений по Email.';
+                errorBanner.classList.add('active');
                 return;
             }
 
@@ -1906,117 +1679,124 @@
 
             if (isMinor()) {
                 if (!guardianName || !guardianEmail) {
-                    showError('Для соискателей младше 18 лет нужно указать данные родителя/опекуна.');
+                    errorBannerText.textContent = 'Для соискателей младше 18 лет нужно указать данные родителя/опекуна.';
+                    errorBanner.classList.add('active');
                     return;
                 }
                 if (!guardianEmail.includes('@')) {
-                    showError('Введите корректный email родителя.');
+                    errorBannerText.textContent = 'Введите корректный email родителя.';
+                    errorBanner.classList.add('active');
                     return;
                 }
                 if (!guardianConsentCheckbox.checked) {
-                    showError('Для соискателей младше 18 лет требуется согласие родителя или законного представителя.');
+                    errorBannerText.textContent = 'Для соискателей младше 18 лет требуется согласие родителя или законного представителя.';
+                    errorBanner.classList.add('active');
                     return;
                 }
             }
 
+            // Анимация
             submitBtn.disabled = true;
             submitBtn.classList.add('btn-loading');
             submitBtn.querySelector('.btn-text').style.display = 'none';
             submitBtn.querySelector('.spinner').style.display = 'flex';
 
-            const portfolio = portfolioInput.value.trim() || 'Не указано';
-            const additional = additionalInput.value.trim() || 'Не указано';
+            // Формируем данные
+            const applicationData = {
+                vacancy: vacancyTitle,
+                name: name,
+                email: email,
+                age: age,
+                is_minor: isMinor() ? 'Да' : 'Нет',
+                experience: experience,
+                motivation: motivation,
+                languages: languageDisplay,
+                schedule: schedule,
+                salary: salary + ' Robux',
+                interview_time: datetime,
+                portfolio: portfolioInput.value.trim() || 'Не указано',
+                additional: additionalInput.value.trim() || 'Не указано',
+                consent_policy: consentPolicy.checked ? '✅ Да' : '❌ Нет',
+                consent_data: consentData.checked ? '✅ Да' : '❌ Нет',
+                consent_contact: consentContact.checked ? '✅ Да' : '❌ Нет',
+                guardian_name: isMinor() ? guardianName : '—',
+                guardian_contact: isMinor() ? guardianEmail : '—',
+                guardian_consent: isMinor() ? (guardianConsentCheckbox.checked ? '✅ Да' : '❌ Нет') : '—'
+            };
 
-            try {
-                // ===== 1. ОТПРАВКА ЗАЯВКИ =====
-                const applicationData = {
-                    vacancy: vacancyTitle,
-                    name: name,
-                    email: email,
-                    age: age,
-                    is_minor: isMinor() ? 'Да' : 'Нет',
-                    experience: experience,
-                    motivation: motivation,
-                    languages: languageDisplay,
-                    schedule: schedule,
-                    salary: salary + ' Robux',
-                    interview_time: datetime,
-                    portfolio: portfolio,
-                    additional: additional,
-                    consent_policy: consentPolicy.checked ? '✅ Да' : '❌ Нет',
-                    consent_data: consentData.checked ? '✅ Да' : '❌ Нет',
-                    consent_contact: consentContact.checked ? '✅ Да' : '❌ Нет',
-                    guardian_name: isMinor() ? guardianName : '—',
-                    guardian_contact: isMinor() ? guardianEmail : '—',
-                    guardian_consent: isMinor() ? (guardianConsentCheckbox.checked ? '✅ Да' : '❌ Нет') : '—'
-                };
+            // Создаём скрытую форму для FormSubmit
+            const tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = 'https://formsubmit.co/metro.new.help@gmail.com';
+            tempForm.target = '_blank';
 
-                await emailjs.send(
-                    EMAILJS_CONFIG.serviceId,
-                    EMAILJS_CONFIG.templateApplication,
-                    applicationData
-                );
-
-                // ===== 2. ОТПРАВКА ПИСЬМА РОДИТЕЛЯМ =====
-                if (isMinor()) {
-                    const parentData = {
-                        parent_name: guardianName,
-                        child_name: name,
-                        child_age: age,
-                        vacancy: vacancyTitle,
-                        parent_email: guardianEmail
-                    };
-
-                    await emailjs.send(
-                        EMAILJS_CONFIG.serviceId,
-                        EMAILJS_CONFIG.templateParent,
-                        parentData
-                    );
-                }
-
-                successOverlay.classList.add('active');
-
-                form.reset();
-                document.querySelectorAll('.calendar-dates .day').forEach(c => c.classList.remove('active'));
-                timeBtns.forEach(b => b.classList.remove('active'));
-                customTimeBtn.classList.remove('active');
-                customTimeInputDiv.classList.remove('active');
-                selectedDate = null;
-                selectedTime = null;
-                selectedDateTimeInput.value = '';
-                selectedText.textContent = '—';
-                grecaptcha.reset();
-                recaptchaVerified = false;
-                updateGuardianBlock();
-                updateProgress();
-
-            } catch (error) {
-                console.error('Ошибка отправки:', error);
-                showError('Не удалось отправить заявку. Проверьте интернет-соединение и попробуйте снова.');
-                grecaptcha.reset();
-                recaptchaVerified = false;
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('btn-loading');
-                submitBtn.querySelector('.btn-text').style.display = 'inline-flex';
-                submitBtn.querySelector('.spinner').style.display = 'none';
+            // Добавляем все поля
+            for (const [key, value] of Object.entries(applicationData)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                tempForm.appendChild(input);
             }
+
+            // Добавляем скрытые поля FormSubmit
+            const hiddenFields = {
+                '_subject': '📩 Новая заявка на вакансию',
+                '_captcha': 'true',
+                '_template': 'table',
+                '_autoresponse': 'Спасибо за вашу заявку! Мы рассмотрим её в ближайшее время и свяжемся с вами.'
+            };
+
+            for (const [key, value] of Object.entries(hiddenFields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                tempForm.appendChild(input);
+            }
+
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+            document.body.removeChild(tempForm);
+
+            // Показываем успех
+            successOverlay.classList.add('active');
+
+            // Сбрасываем кнопку
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('btn-loading');
+            submitBtn.querySelector('.btn-text').style.display = 'inline-flex';
+            submitBtn.querySelector('.spinner').style.display = 'none';
+
+            // Сбрасываем форму
+            form.reset();
+            document.querySelectorAll('.calendar-dates .day').forEach(c => c.classList.remove('active'));
+            timeBtns.forEach(b => b.classList.remove('active'));
+            customTimeBtn.classList.remove('active');
+            customTimeInputDiv.classList.remove('active');
+            selectedDate = null;
+            selectedTime = null;
+            selectedDateTimeInput.value = '';
+            selectedText.textContent = '—';
+            updateGuardianBlock();
+            updateProgress();
         });
 
+        // ============================================================
         // ===== ЗАКРЫТИЕ УСПЕШНОГО ОКНА =====
+        // ============================================================
         function closeSuccess() {
             successOverlay.classList.remove('active');
+            window.location.href = 'https://kirill12633.github.io/careers.metro.new/vacancies';
         }
 
         successOverlay.addEventListener('click', function(e) {
             if (e.target === this) closeSuccess();
         });
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') closeSuccess();
-        });
-
+        // ============================================================
         // ===== ТЕМА =====
+        // ============================================================
         const THEME_KEY = 'metro_new_theme';
         const root = document.documentElement;
 
@@ -2039,23 +1819,21 @@
             localStorage.setItem(THEME_KEY, currentTheme);
         });
 
+        // ============================================================
         // ===== ЗАПУСК =====
-        document.addEventListener('DOMContentLoaded', function() {
-            loadVacancyInfo();
-            renderCalendar();
-            updateProgress();
-            const today = new Date();
-            selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-            renderCalendar();
-            updateSelectedDisplay();
-        });
+        // ============================================================
+        loadVacancyInfo();
+        renderCalendar();
+        updateProgress();
+        const today = new Date();
+        selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        renderCalendar();
+        updateSelectedDisplay();
 
         // Для глобального доступа
         window.openConsentModal = openConsentModal;
         window.closeConsentModal = closeConsentModal;
         window.closeSuccess = closeSuccess;
-        window.onRecaptchaSuccess = onRecaptchaSuccess;
-        window.onRecaptchaExpired = onRecaptchaExpired;
     </script>
 
 </body>
