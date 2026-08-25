@@ -16,7 +16,6 @@
     <!-- ===== FIREBASE ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
 
     <style>
         /* ===== ПЕРЕМЕННЫЕ ===== */
@@ -35,8 +34,6 @@
             --accent-hover: #ffe14d;
             --accent-light: rgba(255, 215, 0, 0.15);
             --accent-glow: rgba(255, 215, 0, 0.2);
-            --blue: #4d94ff;
-            --blue-hover: #7aacff;
             --green: #34a853;
             --green-light: rgba(52, 168, 83, 0.15);
             --red: #f28b82;
@@ -59,8 +56,6 @@
             --accent-hover: #c2a300;
             --accent-light: rgba(230, 194, 0, 0.12);
             --accent-glow: rgba(230, 194, 0, 0.18);
-            --blue: #0066CC;
-            --blue-hover: #0052a3;
             --green: #1e8e4e;
             --green-light: rgba(30, 142, 78, 0.1);
             --red: #d93025;
@@ -88,7 +83,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
@@ -202,6 +197,23 @@
             transform: rotate(-90deg) scale(0.3);
         }
 
+        /* ===== LOADING ===== */
+        .loading {
+            text-align: center;
+            padding: 30px 0;
+            color: var(--text-secondary);
+        }
+
+        .loading i {
+            font-size: 2rem;
+            color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
         /* ===== VACANCY INFO ===== */
         .vacancy-info {
             background: var(--bg-card);
@@ -246,6 +258,13 @@
             width: 16px;
         }
 
+        .vacancy-info .closed-message {
+            color: var(--text-tertiary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
         /* ===== FORM ===== */
         .form-section {
             background: var(--bg-card);
@@ -287,7 +306,6 @@
         }
 
         .form-group input,
-        .form-group select,
         .form-group textarea {
             width: 100%;
             padding: 12px 16px;
@@ -301,7 +319,6 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
@@ -309,14 +326,8 @@
         }
 
         .form-group textarea {
-            min-height: 100px;
+            min-height: 80px;
             resize: vertical;
-        }
-
-        .form-group .hint {
-            color: var(--text-tertiary);
-            font-size: 0.8rem;
-            margin-top: 4px;
         }
 
         .form-row {
@@ -325,112 +336,11 @@
             gap: 20px;
         }
 
-        .form-group.file-upload input[type="file"] {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .form-group.file-upload input[type="file"]::file-selector-button {
-            padding: 8px 16px;
-            border-radius: var(--radius-sm);
-            border: none;
-            background: var(--accent);
-            color: #0d1526;
-            font-weight: 700;
-            cursor: pointer;
-            margin-right: 12px;
-            transition: background 0.2s;
-        }
-
-        .form-group.file-upload input[type="file"]::file-selector-button:hover {
-            background: var(--accent-hover);
-        }
-
         .form-actions {
             display: flex;
             gap: 16px;
             flex-wrap: wrap;
             margin-top: 8px;
-        }
-
-        /* ===== SUCCESS ===== */
-        .success-section {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--green);
-            border-radius: var(--radius-lg);
-            padding: 50px 40px;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .success-section.show {
-            display: block;
-        }
-
-        .success-section i {
-            font-size: 4rem;
-            color: var(--green);
-            display: block;
-            margin-bottom: 16px;
-        }
-
-        .success-section h2 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .success-section p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 500px;
-            margin: 0 auto 24px;
-        }
-
-        /* ===== LOADING ===== */
-        .loading {
-            text-align: center;
-            padding: 60px 0;
-            color: var(--text-secondary);
-        }
-
-        .loading i {
-            font-size: 3rem;
-            color: var(--accent);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ===== TOAST ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 24px;
-            box-shadow: var(--shadow-lg);
-            z-index: 9999;
-            max-width: 400px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.4s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast.success {
-            border-color: var(--green);
-        }
-        .toast.error {
-            border-color: var(--red);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -450,9 +360,6 @@
             }
             .vacancy-info {
                 padding: 18px 20px;
-            }
-            .success-section {
-                padding: 30px 20px;
             }
         }
 
@@ -481,7 +388,7 @@
         <header class="page-header">
             <h1><i class="fas fa-paper-plane" style="color:var(--accent);"></i> Отклик на вакансию</h1>
             <div class="header-actions">
-                <a href="https://kirill12633.github.io/careers.metro.new/vacancies/" class="btn btn-secondary">
+                <a href="https://kirill12633.github.io/careers.metro.new/vacancies" class="btn btn-secondary">
                     <i class="fas fa-arrow-left"></i> Назад к вакансиям
                 </a>
                 <button class="theme-toggle" id="themeToggle" title="Сменить тему">
@@ -504,18 +411,20 @@
                     <span><i class="fas fa-map-pin"></i> <span id="vLocation">—</span></span>
                     <span><i class="fas fa-clock"></i> <span id="vSchedule">—</span></span>
                 </div>
+                <div class="closed-message" id="closedMessage" style="display:none;">
+                    <i class="fas fa-clock" style="color:var(--accent);"></i>
+                    Эта вакансия ещё не открыта для откликов. Следите за обновлениями!
+                </div>
             </div>
         </div>
 
         <!-- ===== FORM ===== -->
         <section class="form-section" id="formSection">
             <h2>Анкета соискателя</h2>
-            <p class="subtitle">Заполните форму, чтобы отправить заявку на вакансию</p>
+            <p class="subtitle">Заполните форму и нажмите «Отправить» — письмо откроется в вашем почтовом клиенте</p>
 
             <form id="applicationForm">
-                <!-- Скрытое поле с ID вакансии -->
-                <input type="hidden" id="vacancyId" value="" />
-                <input type="hidden" id="vacancyTitle" value="" />
+                <input type="hidden" id="vacancyTitleInput" value="" />
 
                 <div class="form-row">
                     <div class="form-group">
@@ -549,12 +458,6 @@
                     <input type="url" id="portfolio" placeholder="https://github.com/your-username" />
                 </div>
 
-                <div class="form-group file-upload">
-                    <label for="resume">Прикрепить резюме <span class="required">*</span></label>
-                    <input type="file" id="resume" accept=".pdf,.doc,.docx" required />
-                    <div class="hint">Поддерживаемые форматы: PDF, DOC, DOCX. Максимальный размер: 10 МБ</div>
-                </div>
-
                 <div class="form-group">
                     <label for="additionalInfo">Дополнительная информация</label>
                     <textarea id="additionalInfo" placeholder="Всё, что вы хотите добавить к своей заявке..." rows="3"></textarea>
@@ -571,22 +474,6 @@
             </form>
         </section>
 
-        <!-- ===== SUCCESS ===== -->
-        <section class="success-section" id="successSection">
-            <i class="fas fa-check-circle"></i>
-            <h2>Заявка успешно отправлена!</h2>
-            <p>Спасибо за вашу заявку. Мы рассмотрим её в ближайшее время и свяжемся с вами.</p>
-            <a href="https://kirill12633.github.io/careers.metro.new/vacancies/" class="btn btn-primary">
-                <i class="fas fa-arrow-left"></i> Вернуться к вакансиям
-            </a>
-        </section>
-
-    </div>
-
-    <!-- ===== TOAST ===== -->
-    <div class="toast" id="toast">
-        <div class="toast-title" id="toastTitle">Готово!</div>
-        <div class="toast-message" id="toastMessage">Действие выполнено</div>
     </div>
 
     <!-- ============================================================ -->
@@ -606,7 +493,6 @@
         // ===== ИНИЦИАЛИЗАЦИЯ FIREBASE =====
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage();
 
         // ===== DOM ЭЛЕМЕНТЫ =====
         const infoLoading = document.getElementById('infoLoading');
@@ -615,41 +501,21 @@
         const vTitle = document.getElementById('vTitle');
         const vLocation = document.getElementById('vLocation');
         const vSchedule = document.getElementById('vSchedule');
-
-        const form = document.getElementById('applicationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const successSection = document.getElementById('successSection');
+        const closedMessage = document.getElementById('closedMessage');
         const formSection = document.getElementById('formSection');
-        const vacancyInfo = document.getElementById('vacancyInfo');
 
-        const vacancyIdInput = document.getElementById('vacancyId');
-        const vacancyTitleInput = document.getElementById('vacancyTitle');
+        const vacancyTitleInput = document.getElementById('vacancyTitleInput');
         const fullNameInput = document.getElementById('fullName');
         const emailInput = document.getElementById('email');
         const ageInput = document.getElementById('age');
         const experienceInput = document.getElementById('experience');
         const motivationInput = document.getElementById('motivation');
         const portfolioInput = document.getElementById('portfolio');
-        const resumeInput = document.getElementById('resume');
         const additionalInfoInput = document.getElementById('additionalInfo');
 
-        const toast = document.getElementById('toast');
-        const toastTitle = document.getElementById('toastTitle');
-        const toastMessage = document.getElementById('toastMessage');
-        let toastTimeout = null;
+        const form = document.getElementById('applicationForm');
 
-        // ===== TOAST =====
-        function showToast(title, message, type = 'success') {
-            toast.className = 'toast ' + type;
-            toastTitle.textContent = title;
-            toastMessage.textContent = message;
-            toast.classList.add('show');
-
-            if (toastTimeout) clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
-        }
+        let vacancyTitle = '';
 
         // ===== ПОЛУЧЕНИЕ ID ВАКАНСИИ ИЗ URL =====
         function getVacancyIdFromUrl() {
@@ -660,40 +526,48 @@
         // ===== ЗАГРУЗКА ИНФОРМАЦИИ О ВАКАНСИИ =====
         async function loadVacancyInfo() {
             const id = getVacancyIdFromUrl();
+
             if (!id) {
                 infoLoading.innerHTML = '<p style="color:var(--red);">❌ Не указана вакансия</p>';
+                formSection.style.display = 'none';
                 return;
             }
 
             try {
                 const doc = await db.collection('careers').doc(id).get();
+
                 if (!doc.exists) {
                     infoLoading.innerHTML = '<p style="color:var(--red);">❌ Вакансия не найдена</p>';
+                    formSection.style.display = 'none';
                     return;
                 }
 
                 const data = doc.data();
+                vacancyTitle = data.title || 'Без названия';
 
+                // Если вакансия "Скоро" — скрываем форму
                 if (data.status === 'soon') {
-                    infoLoading.innerHTML = `
-                        <p style="color:var(--text-tertiary);">
-                            <i class="fas fa-clock" style="color:var(--accent);"></i>
-                            Эта вакансия ещё не открыта для откликов. Следите за обновлениями!
-                        </p>
-                    `;
-                    document.getElementById('formSection').style.display = 'none';
+                    vBadge.textContent = 'Скоро';
+                    vBadge.className = 'badge closed';
+                    vTitle.textContent = vacancyTitle;
+                    vLocation.textContent = data.location || '—';
+                    vSchedule.textContent = data.schedule || '—';
+                    closedMessage.style.display = 'block';
+                    formSection.style.display = 'none';
+
+                    infoLoading.style.display = 'none';
+                    infoContent.style.display = 'block';
                     return;
                 }
 
-                // Заполняем информацию
+                // Заполняем информацию для открытой вакансии
                 vBadge.textContent = 'Открыта';
                 vBadge.className = 'badge';
-                vTitle.textContent = data.title || 'Без названия';
+                vTitle.textContent = vacancyTitle;
                 vLocation.textContent = data.location || '—';
                 vSchedule.textContent = data.schedule || '—';
 
-                vacancyIdInput.value = id;
-                vacancyTitleInput.value = data.title || '';
+                vacancyTitleInput.value = vacancyTitle;
 
                 infoLoading.style.display = 'none';
                 infoContent.style.display = 'block';
@@ -701,80 +575,74 @@
             } catch (error) {
                 console.error('Ошибка загрузки:', error);
                 infoLoading.innerHTML = '<p style="color:var(--red);">❌ Ошибка загрузки вакансии</p>';
+                formSection.style.display = 'none';
             }
         }
 
-        // ===== ОТПРАВКА ЗАЯВКИ =====
-        form.addEventListener('submit', async function(e) {
+        // ===== ОТПРАВКА ЧЕРЕЗ MAILTO =====
+        form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Валидация
+            // Сбор данных
             const name = fullNameInput.value.trim();
             const email = emailInput.value.trim();
             const age = ageInput.value.trim();
             const experience = experienceInput.value.trim();
             const motivation = motivationInput.value.trim();
-            const resumeFile = resumeInput.files[0];
+            const portfolio = portfolioInput.value.trim() || 'Не указано';
+            const additional = additionalInfoInput.value.trim() || 'Не указано';
 
-            if (!name || !email || !age || !experience || !motivation || !resumeFile) {
-                showToast('Ошибка', 'Заполните все обязательные поля', 'error');
+            // Валидация
+            if (!name || !email || !age || !experience || !motivation) {
+                alert('⚠️ Заполните все обязательные поля!');
                 return;
             }
 
             if (!email.includes('@')) {
-                showToast('Ошибка', 'Введите корректный email', 'error');
+                alert('⚠️ Введите корректный email!');
                 return;
             }
 
             if (parseInt(age) < 14 || parseInt(age) > 99) {
-                showToast('Ошибка', 'Возраст должен быть от 14 до 99 лет', 'error');
+                alert('⚠️ Возраст должен быть от 14 до 99 лет!');
                 return;
             }
 
-            // Блокируем кнопку
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+            // Формируем тело письма
+            const body = `
+    Новая заявка на вакансию
 
-            try {
-                // 1. Загружаем резюме в Firebase Storage
-                const storageRef = storage.ref();
-                const fileRef = storageRef.child('resumes/' + Date.now() + '_' + resumeFile.name);
-                const uploadTask = await fileRef.put(resumeFile);
-                const resumeUrl = await uploadTask.ref.getDownloadURL();
+    ─── Данные соискателя ───
 
-                // 2. Сохраняем данные в Firestore
-                const applicationData = {
-                    vacancyId: vacancyIdInput.value,
-                    vacancyTitle: vacancyTitleInput.value || 'Не указана',
-                    name: name,
-                    email: email,
-                    age: parseInt(age),
-                    experience: experience,
-                    motivation: motivation,
-                    portfolio: portfolioInput.value.trim() || '',
-                    resumeUrl: resumeUrl,
-                    resumeFileName: resumeFile.name,
-                    additionalInfo: additionalInfoInput.value.trim() || '',
-                    status: 'new',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
+    Вакансия: ${vacancyTitle}
+    Имя: ${name}
+    Email: ${email}
+    Возраст: ${age}
 
-                await db.collection('applications').add(applicationData);
+    Опыт работы:
+    ${experience}
 
-                // 3. Показываем успех
-                formSection.style.display = 'none';
-                vacancyInfo.style.display = 'none';
-                successSection.classList.add('show');
+    Мотивация:
+    ${motivation}
 
-                showToast('Успешно!', 'Заявка отправлена');
+    Портфолио: ${portfolio}
 
-            } catch (error) {
-                console.error('Ошибка отправки:', error);
-                showToast('Ошибка', 'Не удалось отправить заявку. Попробуйте позже.', 'error');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить заявку';
-            }
+    Дополнительная информация:
+    ${additional}
+            `;
+
+            // Кодируем для URL
+            const subjectEncoded = encodeURIComponent(`Заявка на вакансию ${vacancyTitle}`);
+            const bodyEncoded = encodeURIComponent(body);
+
+            // Открываем почтовый клиент
+            window.location.href = `mailto:metro.new.help@gmail.com?subject=${subjectEncoded}&body=${bodyEncoded}`;
+
+            // Показываем сообщение
+            alert('✅ Письмо открыто! Проверьте и отправьте.');
+
+            // Очищаем форму
+            form.reset();
         });
 
         // ===== ТЕМА =====
