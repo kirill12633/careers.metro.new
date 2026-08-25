@@ -5,22 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Подтверждение согласия — Метро New</title>
 
-    <!-- ===== ИКОНКИ САЙТА ===== -->
     <link rel="shortcut icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" />
-
-    <!-- ===== ШРИФТЫ ===== -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- ===== FIREBASE ===== -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
     <style>
-        /* ============================================================
-                   ROOT VARIABLES
-                   ============================================================ */
         :root {
             --radius: 12px;
             --radius-lg: 16px;
@@ -28,58 +20,48 @@
             --bg-primary: #0d1526;
             --bg-secondary: #131c33;
             --bg-card: #182444;
-            --bg-card-hover: #1d2b4f;
             --text-primary: #f2f4fa;
             --text-secondary: #a6b0cc;
             --text-tertiary: #77819e;
             --accent: #FFD700;
             --accent-hover: #ffe14d;
-            --accent-light: rgba(255, 215, 0, 0.12);
-            --accent-glow: rgba(255, 215, 0, 0.2);
+            --accent-light: rgba(255,215,0,0.12);
+            --accent-glow: rgba(255,215,0,0.2);
             --green: #34a853;
-            --green-light: rgba(52, 168, 83, 0.15);
+            --green-light: rgba(52,168,83,0.15);
             --red: #f28b82;
-            --red-light: rgba(242, 139, 130, 0.15);
+            --red-light: rgba(242,139,130,0.15);
             --border: #253460;
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+            --shadow: 0 8px 30px rgba(0,0,0,0.5);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.6);
             color-scheme: dark;
         }
-
         [data-theme="light"] {
             --bg-primary: #ffffff;
             --bg-secondary: #f4f6fb;
             --bg-card: #ffffff;
-            --bg-card-hover: #eef1f9;
             --text-primary: #14151f;
             --text-secondary: #565f7a;
             --text-tertiary: #8890a8;
             --accent: #e6c200;
             --accent-hover: #c2a300;
-            --accent-light: rgba(230, 194, 0, 0.12);
-            --accent-glow: rgba(230, 194, 0, 0.18);
+            --accent-light: rgba(230,194,0,0.12);
+            --accent-glow: rgba(230,194,0,0.18);
             --green: #1e8e4e;
-            --green-light: rgba(30, 142, 78, 0.1);
+            --green-light: rgba(30,142,78,0.1);
             --red: #d93025;
-            --red-light: rgba(217, 48, 37, 0.1);
+            --red-light: rgba(217,48,37,0.1);
             --border: #e2e6f0;
-            --shadow: 0 8px 30px rgba(20, 22, 40, 0.1);
-            --shadow-lg: 0 16px 40px rgba(20, 22, 40, 0.12);
-            color-scheme: light;
+            --shadow: 0 8px 30px rgba(20,22,40,0.1);
+            --shadow-lg: 0 16px 40px rgba(20,22,40,0.12);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s, color 0.3s;
             background-image: radial-gradient(ellipse at 20% 30%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 70%, color-mix(in srgb, #4d94ff 7%, transparent) 0%, transparent 60%);
             min-height: 100vh;
@@ -88,14 +70,7 @@
             align-items: center;
             padding: 20px;
         }
-
-        .container {
-            max-width: 580px;
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* ===== КАРТОЧКА ===== */
+        .container { max-width: 580px; width:100%; }
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -104,7 +79,6 @@
             box-shadow: var(--shadow-lg);
             text-align: center;
         }
-
         .card .icon-circle {
             display: inline-flex;
             align-items: center;
@@ -118,7 +92,6 @@
             color: var(--accent);
             margin-bottom: 16px;
         }
-
         .card h1 {
             font-size: 1.8rem;
             font-weight: 800;
@@ -128,19 +101,12 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .card .subtitle {
             color: var(--text-secondary);
             font-size: 1rem;
             margin-bottom: 24px;
         }
-
-        /* ===== ФОРМА ===== */
-        .form-group {
-            margin-bottom: 18px;
-            text-align: left;
-        }
-
+        .form-group { margin-bottom: 18px; text-align:left; }
         .form-group label {
             display: block;
             font-weight: 600;
@@ -148,14 +114,7 @@
             margin-bottom: 4px;
             color: var(--text-secondary);
         }
-
-        .form-group label .required {
-            color: var(--red);
-            margin-left: 4px;
-        }
-
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
             padding: 12px 16px;
             border-radius: var(--radius);
@@ -166,39 +125,25 @@
             font-size: 0.95rem;
             transition: border-color 0.25s;
         }
-
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-light);
         }
-
-        .form-group input::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        /* ===== ПОЛЕ С КОДОМ ===== */
+        .form-group input::placeholder { color: var(--text-tertiary); }
         .code-input-group {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-
         .code-input-group input {
             flex: 1;
             text-align: center;
             font-size: 1.2rem;
             letter-spacing: 4px;
             font-weight: 700;
+            text-transform: uppercase;
         }
-
         .code-input-group .btn-code {
             padding: 12px 18px;
             border-radius: var(--radius);
@@ -211,47 +156,10 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
-
         .code-input-group .btn-code:hover {
             border-color: var(--accent);
             color: var(--accent);
         }
-
-        /* ===== ЧЕКБОКС ===== */
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin: 8px 0 4px;
-            text-align: left;
-        }
-
-        .checkbox-group input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--accent);
-        }
-
-        .checkbox-group label {
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-
-        .checkbox-group label a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .checkbox-group label a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== КНОПКИ ===== */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -267,45 +175,24 @@
             justify-content: center;
             margin-top: 8px;
         }
-
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), var(--accent-hover));
             color: #0d1526;
             box-shadow: 0 4px 20px var(--accent-glow);
         }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px var(--accent-glow);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px var(--accent-glow); }
+        .btn-primary:disabled { opacity:0.6; cursor:not-allowed; transform:none !important; }
         .btn-secondary {
             background: var(--bg-secondary);
             color: var(--text-secondary);
             border: 1px solid var(--border);
         }
-
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--text-tertiary);
-        }
-
-        /* ===== ЗАГРУЗКА ===== */
+        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--text-tertiary); }
         .btn-loading {
             position: relative;
             pointer-events: none;
         }
-
-        .btn-loading .btn-text {
-            visibility: hidden;
-        }
-
+        .btn-loading .btn-text { visibility: hidden; }
         .btn-loading .spinner {
             position: absolute;
             left: 50%;
@@ -316,16 +203,8 @@
             gap: 10px;
             color: #0d1526;
         }
-
-        .btn-loading .spinner i {
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* ===== ИНФО-БЛОК С РЕБЁНКОМ ===== */
+        .btn-loading .spinner i { animation: spin 0.8s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         .child-info {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
@@ -334,30 +213,47 @@
             margin: 16px 0;
             text-align: left;
         }
-
         .child-info .info-row {
             display: flex;
             padding: 4px 0;
             font-size: 0.9rem;
         }
-
         .child-info .info-row .label {
             color: var(--text-tertiary);
             width: 120px;
             min-width: 120px;
         }
-
         .child-info .info-row .value {
             color: var(--text-primary);
             font-weight: 600;
         }
-
         .child-info .info-row .value.hidden {
             color: var(--accent);
             letter-spacing: 2px;
         }
-
-        /* ===== УСПЕХ ===== */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 8px 0 4px;
+            text-align: left;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+        .checkbox-group label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .checkbox-group label a { color: var(--accent); text-decoration: none; }
+        .checkbox-group label a:hover { text-decoration: underline; }
         .success-box {
             display: none;
             padding: 20px;
@@ -367,29 +263,13 @@
             margin-top: 20px;
             color: var(--green);
         }
-
         .success-box.active {
             display: block;
             animation: fadeIn 0.4s ease;
         }
-
-        .success-box i {
-            font-size: 2rem;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .success-box h3 {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-        }
-
-        .success-box p {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        /* ===== ОШИБКА ===== */
+        .success-box i { font-size: 2rem; display: block; margin-bottom: 8px; }
+        .success-box h3 { font-size: 1.2rem; margin-bottom: 4px; }
+        .success-box p { font-size: 0.9rem; color: var(--text-secondary); }
         .error-box {
             display: none;
             padding: 14px 18px;
@@ -401,16 +281,8 @@
             font-size: 0.9rem;
             text-align: left;
         }
-
-        .error-box.active {
-            display: block;
-        }
-
-        .error-box i {
-            margin-right: 8px;
-        }
-
-        /* ===== ПРИМЕЧАНИЕ ===== */
+        .error-box.active { display: block; }
+        .error-box i { margin-right: 8px; }
         .note {
             margin-top: 18px;
             padding-top: 16px;
@@ -418,57 +290,56 @@
             color: var(--text-tertiary);
             font-size: 0.8rem;
         }
-
-        .note a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        .note a:hover {
-            text-decoration: underline;
-        }
-
+        .note a { color: var(--accent); text-decoration: none; }
+        .note a:hover { text-decoration: underline; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity:0; transform:translateY(10px); }
+            to { opacity:1; transform:translateY(0); }
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .card {
-                padding: 32px 20px;
-            }
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .card h1 {
-                font-size: 1.4rem;
-            }
-            .card .icon-circle {
-                width: 64px;
-                height: 64px;
-                font-size: 2rem;
-            }
-            .btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-            }
-            .code-input-group {
-                flex-direction: column;
-            }
-            .code-input-group .btn-code {
-                width: 100%;
-                justify-content: center;
-            }
-            .child-info .info-row {
-                flex-direction: column;
-                padding: 6px 0;
-            }
-            .child-info .info-row .label {
-                width: 100%;
-                min-width: auto;
-                font-size: 0.8rem;
-            }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px var(--accent-glow);
+        }
+        .theme-toggle .fa-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .theme-toggle .fa-sun { opacity: 0; transform: rotate(90deg) scale(0.3); }
+        [data-theme="light"] .theme-toggle .fa-sun { opacity: 1; transform: rotate(0deg) scale(1); color: var(--accent); }
+        [data-theme="light"] .theme-toggle .fa-moon { opacity: 0; transform: rotate(-90deg) scale(0.3); }
+        .card { position: relative; }
+        @media (max-width:480px) {
+            .card { padding:32px 20px; }
+            .form-row { grid-template-columns:1fr; }
+            .card h1 { font-size:1.4rem; }
+            .card .icon-circle { width:64px; height:64px; font-size:2rem; }
+            .btn { padding:12px 24px; font-size:0.9rem; }
+            .code-input-group { flex-direction:column; }
+            .code-input-group .btn-code { width:100%; justify-content:center; }
+            .child-info .info-row { flex-direction:column; padding:6px 0; }
+            .child-info .info-row .label { width:100%; min-width:auto; font-size:0.8rem; }
         }
     </style>
 </head>
@@ -478,22 +349,23 @@
 
         <div class="card">
 
-            <!-- ===== ИКОНКА ===== -->
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </button>
+
             <div class="icon-circle">
                 <i class="fas fa-shield-heart"></i>
             </div>
 
-            <!-- ===== ЗАГОЛОВОК ===== -->
             <h1>Подтверждение согласия</h1>
             <p class="subtitle">Введите код из письма, чтобы подтвердить согласие на участие вашего ребёнка</p>
 
-            <!-- ===== ОШИБКА ===== -->
             <div class="error-box" id="errorBox">
                 <i class="fas fa-triangle-exclamation"></i>
                 <span id="errorText">Код не найден. Проверьте правильность ввода.</span>
             </div>
 
-            <!-- ===== ИНФОРМАЦИЯ О РЕБЁНКЕ (скрыта) ===== -->
             <div class="child-info" id="childInfo" style="display:none;">
                 <div class="info-row">
                     <span class="label">👶 Ребёнок</span>
@@ -507,40 +379,30 @@
                     <span class="label">💼 Вакансия</span>
                     <span class="value" id="vacancyDisplay">—</span>
                 </div>
+                <div class="info-row" id="parentInfoRow" style="display:none; border-top:1px solid var(--border); padding-top:8px; margin-top:4px;">
+                    <span class="label">👨‍👩‍👧 Родитель</span>
+                    <span class="value" id="parentNameDisplay">—</span>
+                </div>
             </div>
 
-            <!-- ===== ФОРМА ===== -->
             <form id="confirmForm">
 
-                <!-- ===== КОД ===== -->
                 <div class="form-group">
                     <label for="codeInput">Код подтверждения <span class="required">*</span></label>
                     <div class="code-input-group">
-                        <input type="text" id="codeInput" placeholder="Например: APP_123456_abc" required />
+                        <input type="text" id="codeInput" placeholder="Например: A7K9M2" maxlength="6" required />
                         <button type="button" class="btn-code" id="checkCodeBtn">
-                            <i class="fas fa-search"></i> Найти
+                            <i class="fas fa-search"></i> Проверить
                         </button>
                     </div>
                 </div>
 
-                <!-- ===== ПОЛЯ ДЛЯ ПОДТВЕРЖДЕНИЯ (появятся после проверки кода) ===== -->
                 <div id="confirmFields" style="display:none;">
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="parentName">Имя родителя <span class="required">*</span></label>
-                            <input type="text" id="parentName" placeholder="Мария Иванова" required />
-                        </div>
-                        <div class="form-group">
-                            <label for="parentEmail">Email родителя <span class="required">*</span></label>
-                            <input type="email" id="parentEmail" placeholder="maria@mail.ru" required />
-                        </div>
-                    </div>
 
                     <div class="checkbox-group">
                         <input type="checkbox" id="consentPolicy" required />
                         <label for="consentPolicy">
-                            Я ознакомлен(а) с <a href="https://kirill12633.github.io/careers.metro.new/policy/minors" target="_blank">Политикой участия несовершеннолетних</a> и согласен(на) с её условиями <span class="required">*</span>
+                            Я ознакомлен(а) с <a href="https://kirill12633.github.io/careers.metro.new/policy/minors/" target="_blank">Политикой участия несовершеннолетних</a> и согласен(на) с её условиями <span class="required">*</span>
                         </label>
                     </div>
 
@@ -559,17 +421,15 @@
                     </button>
                 </div>
 
-                <!-- ===== УСПЕХ ===== -->
                 <div class="success-box" id="successBox">
                     <i class="fas fa-check-circle"></i>
                     <h3>✅ Согласие подтверждено!</h3>
                     <p>Спасибо! Ваше согласие успешно отправлено. Заявка ребёнка будет обработана.</p>
-                    <button class="btn btn-secondary" style="margin-top:12px;" onclick="location.href='https://kirill12633.github.io/careers.metro.new/vacancies'">
+                    <button class="btn btn-secondary" style="margin-top:12px;" onclick="location.href='https://kirill12633.github.io/careers.metro.new/vacancies/'">
                         <i class="fas fa-arrow-left"></i> Вернуться к вакансиям
                     </button>
                 </div>
 
-                <!-- ===== ПРИМЕЧАНИЕ ===== -->
                 <div class="note">
                     <i class="fas fa-info-circle"></i>
                     Код был отправлен на email родителя. Если вы не получили письмо, проверьте папку «Спам».
@@ -601,7 +461,6 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
 
-            // ===== DOM =====
             const errorBox = document.getElementById('errorBox');
             const errorText = document.getElementById('errorText');
             const successBox = document.getElementById('successBox');
@@ -614,9 +473,9 @@
             const childNameDisplay = document.getElementById('childNameDisplay');
             const childEmailDisplay = document.getElementById('childEmailDisplay');
             const vacancyDisplay = document.getElementById('vacancyDisplay');
+            const parentNameDisplay = document.getElementById('parentNameDisplay');
+            const parentInfoRow = document.getElementById('parentInfoRow');
 
-            const parentName = document.getElementById('parentName');
-            const parentEmail = document.getElementById('parentEmail');
             const consentPolicy = document.getElementById('consentPolicy');
             const consentData = document.getElementById('consentData');
 
@@ -638,31 +497,43 @@
                 return name.substring(0, 2) + '*'.repeat(Math.min(name.length - 2, 4)) + '@' + domain;
             }
 
+            function hideName(name) {
+                if (!name || name.length < 2) return '***';
+                return name.charAt(0) + '*'.repeat(name.length - 2) + name.charAt(name.length - 1);
+            }
+
             // ============================================================
             // ===== ПРОВЕРКА КОДА =====
             // ============================================================
             async function checkCode() {
-                const code = codeInput.value.trim();
+                const code = codeInput.value.trim().toUpperCase();
 
                 if (!code) {
                     showError('Введите код подтверждения.');
                     return;
                 }
 
-                // Поиск в Firebase по ID документа
-                try {
-                    const doc = await db.collection('applications').doc(code).get();
+                if (code.length !== 6) {
+                    showError('Код должен состоять из 6 символов.');
+                    return;
+                }
 
-                    if (!doc.exists) {
+                try {
+                    // Поиск по полю code
+                    const snapshot = await db.collection('applications')
+                        .where('code', '==', code)
+                        .get();
+
+                    if (snapshot.empty) {
                         showError('Код не найден. Проверьте правильность ввода.');
                         confirmFields.style.display = 'none';
                         childInfo.style.display = 'none';
                         return;
                     }
 
+                    const doc = snapshot.docs[0];
                     const data = doc.data();
 
-                    // Проверяем, что заявка ещё не подтверждена
                     if (data.status === 'confirmed') {
                         showError('Эта заявка уже подтверждена.');
                         confirmFields.style.display = 'none';
@@ -670,7 +541,6 @@
                         return;
                     }
 
-                    // Если заявка отклонена
                     if (data.status === 'rejected') {
                         showError('Эта заявка была отклонена.');
                         confirmFields.style.display = 'none';
@@ -678,24 +548,23 @@
                         return;
                     }
 
-                    // Сохраняем данные
-                    foundApplicationId = code;
+                    foundApplicationId = doc.id;
                     applicationData = data;
 
-                    // Показываем информацию о ребёнке (со скрытым email)
-                    childNameDisplay.textContent = data.name || '—';
+                    // Показываем информацию о ребёнке (со скрытыми данными)
+                    childNameDisplay.textContent = hideName(data.name || '—');
                     childEmailDisplay.textContent = hideEmail(data.email || '—');
                     vacancyDisplay.textContent = data.vacancyTitle || '—';
 
-                    // Предзаполняем поля родителя из данных заявки
-                    parentName.value = data.parentName || '';
-                    parentEmail.value = data.parentEmail || '';
+                    if (data.parentName) {
+                        parentNameDisplay.textContent = data.parentName;
+                        parentInfoRow.style.display = 'flex';
+                    }
 
                     childInfo.style.display = 'block';
                     confirmFields.style.display = 'block';
                     errorBox.classList.remove('active');
 
-                    // Скролл к полям
                     confirmFields.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
                 } catch (error) {
@@ -709,19 +578,6 @@
             // ============================================================
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-
-                const pName = parentName.value.trim();
-                const pEmail = parentEmail.value.trim();
-
-                if (!pName || !pEmail) {
-                    showError('Заполните все поля родителя.');
-                    return;
-                }
-
-                if (!pEmail.includes('@')) {
-                    showError('Введите корректный email родителя.');
-                    return;
-                }
 
                 if (!consentPolicy.checked) {
                     showError('Необходимо согласие с политикой участия несовершеннолетних.');
@@ -738,24 +594,19 @@
                     return;
                 }
 
-                // Анимация
                 submitBtn.disabled = true;
                 submitBtn.classList.add('btn-loading');
                 submitBtn.querySelector('.btn-text').style.display = 'none';
                 submitBtn.querySelector('.spinner').style.display = 'flex';
 
                 try {
-                    // Обновляем статус в Firebase
                     await db.collection('applications').doc(foundApplicationId).update({
                         status: 'confirmed',
-                        parentName: pName,
-                        parentEmail: pEmail,
                         confirmedAt: firebase.firestore.FieldValue.serverTimestamp(),
                         consentPolicy: consentPolicy.checked ? '✅ Да' : '❌ Нет',
                         consentData: consentData.checked ? '✅ Да' : '❌ Нет'
                     });
 
-                    // Показываем успех
                     form.style.display = 'none';
                     childInfo.style.display = 'none';
                     successBox.classList.add('active');
@@ -790,6 +641,10 @@
                     e.preventDefault();
                     checkCode();
                 }
+                // Автоматический переход к проверке при вводе 6 символов
+                if (this.value.length >= 6 && e.key !== 'Backspace') {
+                    checkCode();
+                }
             });
 
             // ============================================================
@@ -811,12 +666,10 @@
             let currentTheme = getInitialTheme();
             applyTheme(currentTheme);
 
-            // Проверка темы
-            document.addEventListener('DOMContentLoaded', function() {
-                const saved = localStorage.getItem(THEME_KEY);
-                if (saved) {
-                    applyTheme(saved);
-                }
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(currentTheme);
+                localStorage.setItem(THEME_KEY, currentTheme);
             });
         });
     </script>
