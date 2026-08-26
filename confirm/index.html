@@ -2,678 +2,113 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Подтверждение согласия — Метро New</title>
-
-    <link rel="shortcut icon" href="https://kirill12633.github.io/Metro.New.Official/ru/images/metro-icon.png" type="image/png" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-
-   <script src="https://kirill12633.github.io/careers.metro.new/js/maintenance.js"></script> 
     <style>
         :root {
-            --radius: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
-            --bg-primary: #0d1526;
-            --bg-secondary: #131c33;
-            --bg-card: #182444;
-            --text-primary: #f2f4fa;
+            --bg: #0d1526;
+            --card: #182444;
+            --text: #f2f4fa;
             --text-secondary: #a6b0cc;
-            --text-tertiary: #77819e;
             --accent: #FFD700;
-            --accent-hover: #ffe14d;
-            --accent-light: rgba(255,215,0,0.12);
-            --accent-glow: rgba(255,215,0,0.2);
             --green: #34a853;
-            --green-light: rgba(52,168,83,0.15);
             --red: #f28b82;
-            --red-light: rgba(242,139,130,0.15);
             --border: #253460;
-            --shadow: 0 8px 30px rgba(0,0,0,0.5);
-            --shadow-lg: 0 16px 40px rgba(0,0,0,0.6);
-            color-scheme: dark;
-        }
-        [data-theme="light"] {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f4f6fb;
-            --bg-card: #ffffff;
-            --text-primary: #14151f;
-            --text-secondary: #565f7a;
-            --text-tertiary: #8890a8;
-            --accent: #e6c200;
-            --accent-hover: #c2a300;
-            --accent-light: rgba(230,194,0,0.12);
-            --accent-glow: rgba(230,194,0,0.18);
-            --green: #1e8e4e;
-            --green-light: rgba(30,142,78,0.1);
-            --red: #d93025;
-            --red-light: rgba(217,48,37,0.1);
-            --border: #e2e6f0;
-            --shadow: 0 8px 30px rgba(20,22,40,0.1);
-            --shadow-lg: 0 16px 40px rgba(20,22,40,0.12);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background-color 0.3s, color 0.3s;
-            background-image: radial-gradient(ellipse at 20% 30%, color-mix(in srgb, var(--accent) 5%, transparent) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 70%, color-mix(in srgb, #4d94ff 7%, transparent) 0%, transparent 60%);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
-        .container { max-width: 580px; width:100%; }
         .card {
-            background: var(--bg-card);
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius-xl);
-            padding: 48px 40px;
-            box-shadow: var(--shadow-lg);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 460px;
+            width: 100%;
             text-align: center;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.6);
         }
-        .card .icon-circle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .icon {
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: var(--accent-light);
-            border: 2px solid var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 2.5rem;
-            color: var(--accent);
             margin-bottom: 16px;
         }
-        .card h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .card .subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 24px;
-        }
-        .form-group { margin-bottom: 18px; text-align:left; }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 4px;
-            color: var(--text-secondary);
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.25s;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-light);
-        }
-        .form-group input::placeholder { color: var(--text-tertiary); }
-        .code-input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .code-input-group input {
-            flex: 1;
-            text-align: center;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .code-input-group .btn-code {
-            padding: 12px 18px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .code-input-group .btn-code:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 40px;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.25s;
-            width: 100%;
-            justify-content: center;
-            margin-top: 8px;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-            color: #0d1526;
-            box-shadow: 0 4px 20px var(--accent-glow);
-        }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px var(--accent-glow); }
-        .btn-primary:disabled { opacity:0.6; cursor:not-allowed; transform:none !important; }
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-        .btn-secondary:hover { background: var(--bg-card-hover); border-color: var(--text-tertiary); }
-        .btn-loading {
-            position: relative;
-            pointer-events: none;
-        }
-        .btn-loading .btn-text { visibility: hidden; }
-        .btn-loading .spinner {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #0d1526;
-        }
-        .btn-loading .spinner i { animation: spin 0.8s linear infinite; }
+        .icon.loading { background: rgba(255,215,0,0.12); color: var(--accent); }
+        .icon.success { background: rgba(52,168,83,0.15); color: var(--green); }
+        .icon.error { background: rgba(242,139,130,0.15); color: var(--red); }
+        .icon.loading i { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        .child-info {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            margin: 16px 0;
-            text-align: left;
-        }
-        .child-info .info-row {
-            display: flex;
-            padding: 4px 0;
-            font-size: 0.9rem;
-        }
-        .child-info .info-row .label {
-            color: var(--text-tertiary);
-            width: 120px;
-            min-width: 120px;
-        }
-        .child-info .info-row .value {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-        .child-info .info-row .value.hidden {
-            color: var(--accent);
-            letter-spacing: 2px;
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin: 8px 0 4px;
-            text-align: left;
-        }
-        .checkbox-group input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            min-width: 20px;
-            margin-top: 2px;
-            cursor: pointer;
-            accent-color: var(--accent);
-        }
-        .checkbox-group label {
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-        .checkbox-group label a { color: var(--accent); text-decoration: none; }
-        .checkbox-group label a:hover { text-decoration: underline; }
-        .success-box {
-            display: none;
-            padding: 20px;
-            background: var(--green-light);
-            border: 1px solid var(--green);
-            border-radius: var(--radius);
-            margin-top: 20px;
-            color: var(--green);
-        }
-        .success-box.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-        .success-box i { font-size: 2rem; display: block; margin-bottom: 8px; }
-        .success-box h3 { font-size: 1.2rem; margin-bottom: 4px; }
-        .success-box p { font-size: 0.9rem; color: var(--text-secondary); }
-        .error-box {
-            display: none;
-            padding: 14px 18px;
-            background: var(--red-light);
-            border: 1px solid var(--red);
-            border-radius: var(--radius);
-            margin-bottom: 16px;
-            color: var(--red);
-            font-size: 0.9rem;
-            text-align: left;
-        }
-        .error-box.active { display: block; }
-        .error-box i { margin-right: 8px; }
-        .note {
-            margin-top: 18px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            color: var(--text-tertiary);
-            font-size: 0.8rem;
-        }
-        .note a { color: var(--accent); text-decoration: none; }
-        .note a:hover { text-decoration: underline; }
-        @keyframes fadeIn {
-            from { opacity:0; transform:translateY(10px); }
-            to { opacity:1; transform:translateY(0); }
-        }
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        .theme-toggle {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 0 18px var(--accent-glow);
-        }
-        .theme-toggle .fa-moon { opacity: 1; transform: rotate(0deg) scale(1); }
-        .theme-toggle .fa-sun { opacity: 0; transform: rotate(90deg) scale(0.3); }
-        [data-theme="light"] .theme-toggle .fa-sun { opacity: 1; transform: rotate(0deg) scale(1); color: var(--accent); }
-        [data-theme="light"] .theme-toggle .fa-moon { opacity: 0; transform: rotate(-90deg) scale(0.3); }
-        .card { position: relative; }
-        @media (max-width:480px) {
-            .card { padding:32px 20px; }
-            .form-row { grid-template-columns:1fr; }
-            .card h1 { font-size:1.4rem; }
-            .card .icon-circle { width:64px; height:64px; font-size:2rem; }
-            .btn { padding:12px 24px; font-size:0.9rem; }
-            .code-input-group { flex-direction:column; }
-            .code-input-group .btn-code { width:100%; justify-content:center; }
-            .child-info .info-row { flex-direction:column; padding:6px 0; }
-            .child-info .info-row .label { width:100%; min-width:auto; font-size:0.8rem; }
-        }
+        h1 { font-size: 1.5rem; margin-bottom: 10px; }
+        p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; }
     </style>
 </head>
 <body>
-
-    <div class="container">
-
-        <div class="card">
-
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i>
-                <i class="fas fa-sun"></i>
-            </button>
-
-            <div class="icon-circle">
-                <i class="fas fa-shield-heart"></i>
-            </div>
-
-            <h1>Подтверждение согласия</h1>
-            <p class="subtitle">Введите код из письма, чтобы подтвердить согласие на участие вашего ребёнка</p>
-
-            <div class="error-box" id="errorBox">
-                <i class="fas fa-triangle-exclamation"></i>
-                <span id="errorText">Код не найден. Проверьте правильность ввода.</span>
-            </div>
-
-            <div class="child-info" id="childInfo" style="display:none;">
-                <div class="info-row">
-                    <span class="label">👶 Ребёнок</span>
-                    <span class="value" id="childNameDisplay">—</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">📧 Email ребёнка</span>
-                    <span class="value hidden" id="childEmailDisplay">—</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">💼 Вакансия</span>
-                    <span class="value" id="vacancyDisplay">—</span>
-                </div>
-                <div class="info-row" id="parentInfoRow" style="display:none; border-top:1px solid var(--border); padding-top:8px; margin-top:4px;">
-                    <span class="label">👨‍👩‍👧 Родитель</span>
-                    <span class="value" id="parentNameDisplay">—</span>
-                </div>
-            </div>
-
-            <form id="confirmForm">
-
-                <div class="form-group">
-                    <label for="codeInput">Код подтверждения <span class="required">*</span></label>
-                    <div class="code-input-group">
-                        <input type="text" id="codeInput" placeholder="Например: A7K9M2" maxlength="6" required />
-                        <button type="button" class="btn-code" id="checkCodeBtn">
-                            <i class="fas fa-search"></i> Проверить
-                        </button>
-                    </div>
-                </div>
-
-                <div id="confirmFields" style="display:none;">
-
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="consentPolicy" required />
-                        <label for="consentPolicy">
-                            Я ознакомлен(а) с <a href="https://kirill12633.github.io/careers.metro.new/policy/minors/" target="_blank">Политикой участия несовершеннолетних</a> и согласен(на) с её условиями <span class="required">*</span>
-                        </label>
-                    </div>
-
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="consentData" required />
-                        <label for="consentData">
-                            Я даю согласие на обработку персональных данных моего ребёнка согласно <a href="https://kirill12633.github.io/Metro.New.Official/ru/help/privacy-policy/" target="_blank">политике конфиденциальности</a> <span class="required">*</span>
-                        </label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" id="submitBtn">
-                        <span class="btn-text"><i class="fas fa-check-circle"></i> Подтвердить согласие</span>
-                        <span class="spinner" style="display:none;">
-                            <i class="fas fa-spinner"></i> Отправка...
-                        </span>
-                    </button>
-                </div>
-
-                <div class="success-box" id="successBox">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>✅ Согласие подтверждено!</h3>
-                    <p>Спасибо! Ваше согласие успешно отправлено. Заявка ребёнка будет обработана.</p>
-                    <button class="btn btn-secondary" style="margin-top:12px;" onclick="location.href='https://kirill12633.github.io/careers.metro.new/vacancies/'">
-                        <i class="fas fa-arrow-left"></i> Вернуться к вакансиям
-                    </button>
-                </div>
-
-                <div class="note">
-                    <i class="fas fa-info-circle"></i>
-                    Код был отправлен на email родителя. Если вы не получили письмо, проверьте папку «Спам».
-                </div>
-
-            </form>
-
-        </div>
-
+    <div class="card">
+        <div class="icon loading" id="icon"><i class="fas fa-spinner"></i></div>
+        <h1 id="title">Проверяем ссылку…</h1>
+        <p id="text">Пожалуйста, подождите.</p>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- ===== FIREBASE CONFIG ===== -->
-    <!-- ============================================================ -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAVSAXTU1VqF36GJA1pQOfxRxo3_ixW7F4",
-            authDomain: "metro-new-admin.firebaseapp.com",
-            projectId: "metro-new-admin",
-            storageBucket: "metro-new-admin.firebasestorage.app",
-            messagingSenderId: "769002010414",
-            appId: "1:769002010414:web:bdeb93a7eddc4cab63ecbf"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // ===== ЗАМЕНИТЕ на URL вашего задеплоенного Cloudflare Worker =====
+        const WORKER_URL = 'https://metro-new-applications.YOUR-SUBDOMAIN.workers.dev';
 
-        // ============================================================
-        // ===== MAIN SCRIPT =====
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
+        const icon = document.getElementById('icon');
+        const title = document.getElementById('title');
+        const text = document.getElementById('text');
 
-            const errorBox = document.getElementById('errorBox');
-            const errorText = document.getElementById('errorText');
-            const successBox = document.getElementById('successBox');
+        async function confirm() {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
 
-            const codeInput = document.getElementById('codeInput');
-            const checkCodeBtn = document.getElementById('checkCodeBtn');
-            const confirmFields = document.getElementById('confirmFields');
-            const childInfo = document.getElementById('childInfo');
-
-            const childNameDisplay = document.getElementById('childNameDisplay');
-            const childEmailDisplay = document.getElementById('childEmailDisplay');
-            const vacancyDisplay = document.getElementById('vacancyDisplay');
-            const parentNameDisplay = document.getElementById('parentNameDisplay');
-            const parentInfoRow = document.getElementById('parentInfoRow');
-
-            const consentPolicy = document.getElementById('consentPolicy');
-            const consentData = document.getElementById('consentData');
-
-            const form = document.getElementById('confirmForm');
-            const submitBtn = document.getElementById('submitBtn');
-
-            let foundApplicationId = null;
-            let applicationData = null;
-
-            // ============================================================
-            // ===== ФУНКЦИЯ СКРЫТИЯ ДАННЫХ =====
-            // ============================================================
-            function hideEmail(email) {
-                if (!email || !email.includes('@')) return '***@***';
-                const parts = email.split('@');
-                const name = parts[0];
-                const domain = parts[1];
-                if (name.length <= 2) return '*'.repeat(name.length) + '@' + domain;
-                return name.substring(0, 2) + '*'.repeat(Math.min(name.length - 2, 4)) + '@' + domain;
+            if (!token) {
+                showError('Ссылка некорректна', 'В ссылке отсутствует код подтверждения. Проверьте, что вы скопировали её полностью из письма.');
+                return;
             }
 
-            function hideName(name) {
-                if (!name || name.length < 2) return '***';
-                return name.charAt(0) + '*'.repeat(name.length - 2) + name.charAt(name.length - 1);
-            }
+            try {
+                const res = await fetch(`${WORKER_URL}/api/confirm?token=${encodeURIComponent(token)}`);
+                const result = await res.json();
 
-            // ============================================================
-            // ===== ПРОВЕРКА КОДА =====
-            // ============================================================
-            async function checkCode() {
-                const code = codeInput.value.trim().toUpperCase();
-
-                if (!code) {
-                    showError('Введите код подтверждения.');
+                if (!res.ok || !result.ok) {
+                    showError('Не удалось подтвердить', result.error === 'invalid_or_expired_token'
+                        ? 'Эта ссылка уже использована или срок её действия истёк (48 часов). Попросите ребёнка подать заявку заново.'
+                        : 'Что-то пошло не так. Попробуйте позже или свяжитесь с нами.');
                     return;
                 }
 
-                if (code.length !== 6) {
-                    showError('Код должен состоять из 6 символов.');
-                    return;
-                }
-
-                try {
-                    // Поиск по полю code
-                    const snapshot = await db.collection('applications')
-                        .where('code', '==', code)
-                        .get();
-
-                    if (snapshot.empty) {
-                        showError('Код не найден. Проверьте правильность ввода.');
-                        confirmFields.style.display = 'none';
-                        childInfo.style.display = 'none';
-                        return;
-                    }
-
-                    const doc = snapshot.docs[0];
-                    const data = doc.data();
-
-                    if (data.status === 'confirmed') {
-                        showError('Эта заявка уже подтверждена.');
-                        confirmFields.style.display = 'none';
-                        childInfo.style.display = 'none';
-                        return;
-                    }
-
-                    if (data.status === 'rejected') {
-                        showError('Эта заявка была отклонена.');
-                        confirmFields.style.display = 'none';
-                        childInfo.style.display = 'none';
-                        return;
-                    }
-
-                    foundApplicationId = doc.id;
-                    applicationData = data;
-
-                    // Показываем информацию о ребёнке (со скрытыми данными)
-                    childNameDisplay.textContent = hideName(data.name || '—');
-                    childEmailDisplay.textContent = hideEmail(data.email || '—');
-                    vacancyDisplay.textContent = data.vacancyTitle || '—';
-
-                    if (data.parentName) {
-                        parentNameDisplay.textContent = data.parentName;
-                        parentInfoRow.style.display = 'flex';
-                    }
-
-                    childInfo.style.display = 'block';
-                    confirmFields.style.display = 'block';
-                    errorBox.classList.remove('active');
-
-                    confirmFields.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                } catch (error) {
-                    console.error('Ошибка проверки кода:', error);
-                    showError('Ошибка при проверке кода. Попробуйте позже.');
-                }
+                icon.className = 'icon success';
+                icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                title.textContent = 'Согласие подтверждено!';
+                text.textContent = 'Спасибо! Заявка вашего ребёнка передана на рассмотрение.';
+            } catch (err) {
+                showError('Ошибка сети', 'Проверьте подключение к интернету и попробуйте перейти по ссылке снова.');
             }
+        }
 
-            // ============================================================
-            // ===== ОТПРАВКА ПОДТВЕРЖДЕНИЯ =====
-            // ============================================================
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
+        function showError(t, msg) {
+            icon.className = 'icon error';
+            icon.innerHTML = '<i class="fas fa-triangle-exclamation"></i>';
+            title.textContent = t;
+            text.textContent = msg;
+        }
 
-                if (!consentPolicy.checked) {
-                    showError('Необходимо согласие с политикой участия несовершеннолетних.');
-                    return;
-                }
-
-                if (!consentData.checked) {
-                    showError('Необходимо согласие на обработку персональных данных.');
-                    return;
-                }
-
-                if (!foundApplicationId || !applicationData) {
-                    showError('Код не найден. Попробуйте ещё раз.');
-                    return;
-                }
-
-                submitBtn.disabled = true;
-                submitBtn.classList.add('btn-loading');
-                submitBtn.querySelector('.btn-text').style.display = 'none';
-                submitBtn.querySelector('.spinner').style.display = 'flex';
-
-                try {
-                    await db.collection('applications').doc(foundApplicationId).update({
-                        status: 'confirmed',
-                        confirmedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        consentPolicy: consentPolicy.checked ? '✅ Да' : '❌ Нет',
-                        consentData: consentData.checked ? '✅ Да' : '❌ Нет'
-                    });
-
-                    form.style.display = 'none';
-                    childInfo.style.display = 'none';
-                    successBox.classList.add('active');
-
-                } catch (error) {
-                    console.error('Ошибка подтверждения:', error);
-                    showError('Не удалось подтвердить согласие. Попробуйте позже.');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('btn-loading');
-                    submitBtn.querySelector('.btn-text').style.display = 'inline-flex';
-                    submitBtn.querySelector('.spinner').style.display = 'none';
-                }
-            });
-
-            // ============================================================
-            // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
-            // ============================================================
-            function showError(msg) {
-                errorText.textContent = msg;
-                errorBox.classList.add('active');
-                errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-            // ============================================================
-            // ===== ОБРАБОТЧИКИ =====
-            // ============================================================
-            checkCodeBtn.addEventListener('click', checkCode);
-
-            codeInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    checkCode();
-                }
-                // Автоматический переход к проверке при вводе 6 символов
-                if (this.value.length >= 6 && e.key !== 'Backspace') {
-                    checkCode();
-                }
-            });
-
-            // ============================================================
-            // ===== ТЕМА =====
-            // ============================================================
-            const THEME_KEY = 'metro_new_theme';
-            const root = document.documentElement;
-
-            function applyTheme(theme) {
-                root.setAttribute('data-theme', theme);
-            }
-
-            function getInitialTheme() {
-                const saved = localStorage.getItem(THEME_KEY);
-                if (saved === 'light' || saved === 'dark') return saved;
-                return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-            }
-
-            let currentTheme = getInitialTheme();
-            applyTheme(currentTheme);
-
-            document.getElementById('themeToggle').addEventListener('click', () => {
-                currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                applyTheme(currentTheme);
-                localStorage.setItem(THEME_KEY, currentTheme);
-            });
-        });
+        confirm();
     </script>
-
 </body>
 </html>
