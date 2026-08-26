@@ -9,16 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- ===== БИБЛИОТЕКИ ===== -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <!-- ===== FIREBASE (только для ЧТЕНИЯ публичной информации о вакансии) ===== -->
+    <!-- EmailJS и запись в Firestore отсюда убраны — всё это теперь делает Cloudflare Worker -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-   <script src="https://kirill12633.github.io/careers.metro.new/js/maintenance.js"></script> 
     <style>
-        /* ============================================================
-                   СТИЛИ
-                   ============================================================ */
+        /* ===== СТИЛИ (без изменений) ===== */
         :root {
             --radius: 12px;
             --radius-lg: 16px;
@@ -26,50 +23,42 @@
             --bg-primary: #0d1526;
             --bg-secondary: #131c33;
             --bg-card: #182444;
-            --bg-card-hover: #1d2b4f;
             --text-primary: #f2f4fa;
             --text-secondary: #a6b0cc;
             --text-tertiary: #77819e;
-            --text-disabled: #4a5473;
             --accent: #FFD700;
             --accent-hover: #ffe14d;
-            --accent-light: rgba(255, 215, 0, 0.12);
-            --accent-glow: rgba(255, 215, 0, 0.2);
+            --accent-light: rgba(255,215,0,0.12);
+            --accent-glow: rgba(255,215,0,0.2);
             --green: #34a853;
-            --green-light: rgba(52, 168, 83, 0.15);
+            --green-light: rgba(52,168,83,0.15);
             --red: #f28b82;
-            --red-light: rgba(242, 139, 130, 0.15);
+            --red-light: rgba(242,139,130,0.15);
             --border: #253460;
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+            --shadow: 0 8px 30px rgba(0,0,0,0.5);
+            --shadow-lg: 0 16px 40px rgba(0,0,0,0.6);
             color-scheme: dark;
         }
         [data-theme="light"] {
             --bg-primary: #ffffff;
             --bg-secondary: #f4f6fb;
             --bg-card: #ffffff;
-            --bg-card-hover: #eef1f9;
             --text-primary: #14151f;
             --text-secondary: #565f7a;
             --text-tertiary: #8890a8;
-            --text-disabled: #c3c8d6;
             --accent: #e6c200;
             --accent-hover: #c2a300;
-            --accent-light: rgba(230, 194, 0, 0.12);
-            --accent-glow: rgba(230, 194, 0, 0.18);
+            --accent-light: rgba(230,194,0,0.12);
+            --accent-glow: rgba(230,194,0,0.18);
             --green: #1e8e4e;
-            --green-light: rgba(30, 142, 78, 0.1);
+            --green-light: rgba(30,142,78,0.1);
             --red: #d93025;
-            --red-light: rgba(217, 48, 37, 0.1);
+            --red-light: rgba(217,48,37,0.1);
             --border: #e2e6f0;
-            --shadow: 0 8px 30px rgba(20, 22, 40, 0.1);
-            --shadow-lg: 0 16px 40px rgba(20, 22, 40, 0.12);
+            --shadow: 0 8px 30px rgba(20,22,40,0.1);
+            --shadow-lg: 0 16px 40px rgba(20,22,40,0.12);
         }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--bg-primary);
@@ -81,12 +70,7 @@
             min-height: 100vh;
             padding: 20px;
         }
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* ===== HEADER ===== */
+        .container { max-width: 700px; margin: 0 auto; }
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -104,13 +88,6 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .page-header .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -129,32 +106,19 @@
             color: #0d1526;
             box-shadow: 0 4px 20px var(--accent-glow);
         }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px var(--accent-glow);
-        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px var(--accent-glow); }
         .btn-green {
             background: linear-gradient(135deg, var(--green), #2d8f4e);
             color: #fff;
         }
-        .btn-green:hover {
-            transform: translateY(-3px);
-        }
+        .btn-green:hover { transform: translateY(-3px); }
         .btn-secondary {
             background: var(--bg-card);
             color: var(--text-primary);
             border: 1px solid var(--border);
         }
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-            transform: translateY(-3px);
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
+        .btn-secondary:hover { background: var(--bg-card-hover); transform: translateY(-3px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
         .theme-toggle {
             display: inline-flex;
             align-items: center;
@@ -170,47 +134,18 @@
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 0 18px var(--accent-glow);
-        }
-        .theme-toggle .fa-moon {
-            opacity: 1;
-            transform: rotate(0deg) scale(1);
-        }
-        .theme-toggle .fa-sun {
-            opacity: 0;
-            transform: rotate(90deg) scale(0.3);
-        }
-        [data-theme="light"] .theme-toggle .fa-sun {
-            opacity: 1;
-            transform: rotate(0deg) scale(1);
-            color: var(--accent);
-        }
-        [data-theme="light"] .theme-toggle .fa-moon {
-            opacity: 0;
-            transform: rotate(-90deg) scale(0.3);
-        }
-
+        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 0 18px var(--accent-glow); }
+        .theme-toggle .fa-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+        .theme-toggle .fa-sun { opacity: 0; transform: rotate(90deg) scale(0.3); }
+        [data-theme="light"] .theme-toggle .fa-sun { opacity: 1; transform: rotate(0deg) scale(1); color: var(--accent); }
+        [data-theme="light"] .theme-toggle .fa-moon { opacity: 0; transform: rotate(-90deg) scale(0.3); }
         .loading {
             text-align: center;
             padding: 30px 0;
             color: var(--text-secondary);
         }
-        .loading i {
-            font-size: 2rem;
-            color: var(--accent);
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* ===== VACANCY INFO ===== */
+        .loading i { font-size: 2rem; color: var(--accent); animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
         .vacancy-info {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -229,14 +164,8 @@
             color: var(--accent);
             margin-bottom: 8px;
         }
-        .vacancy-info .badge.closed {
-            background: var(--text-disabled);
-            color: var(--text-secondary);
-        }
-        .vacancy-info h2 {
-            font-size: 1.5rem;
-            margin-bottom: 4px;
-        }
+        .vacancy-info .badge.closed { background: var(--text-disabled); color: var(--text-secondary); }
+        .vacancy-info h2 { font-size: 1.5rem; margin-bottom: 4px; }
         .vacancy-info .meta {
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -244,18 +173,13 @@
             flex-wrap: wrap;
             gap: 16px;
         }
-        .vacancy-info .meta i {
-            color: var(--accent);
-            width: 16px;
-        }
+        .vacancy-info .meta i { color: var(--accent); width: 16px; }
         .vacancy-info .closed-message {
             color: var(--text-tertiary);
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid var(--border);
         }
-
-        /* ===== FORM ===== */
         .form-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -276,20 +200,14 @@
             margin-bottom: 24px;
             font-size: 1rem;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-group { margin-bottom: 20px; }
         .form-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 4px;
             font-size: 0.95rem;
         }
-        .form-group label .required {
-            color: var(--red);
-            margin-left: 4px;
-        }
+        .form-group label .required { color: var(--red); margin-left: 4px; }
         .form-group label .optional {
             color: var(--text-tertiary);
             font-weight: 400;
@@ -316,24 +234,14 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-light);
         }
-        .form-group textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .form-group select option {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-        }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        .form-group select option { background: var(--bg-secondary); color: var(--text-primary); }
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-
-        /* ===== ИНПУТ С ИКОНКОЙ ===== */
-        .input-with-icon {
-            position: relative;
-        }
+        .input-with-icon { position: relative; }
         .input-with-icon .input-icon {
             position: absolute;
             left: 14px;
@@ -345,185 +253,10 @@
             transition: color 0.3s;
         }
         .input-with-icon input,
-        .input-with-icon select {
-            padding-left: 42px !important;
-        }
-        .input-with-icon textarea {
-            padding-left: 42px !important;
-            min-height: 60px;
-        }
-        .input-with-icon textarea+.input-icon {
-            top: 18px;
-            transform: none;
-        }
-        .input-with-icon:focus-within .input-icon {
-            color: var(--accent);
-        }
-
-        /* ===== КАЛЕНДАРЬ ===== */
-        .calendar-wrapper {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-        }
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-        }
-        .calendar-header .month-year {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .calendar-header .nav-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 4px 12px;
-            border-radius: var(--radius-sm);
-            transition: all 0.2s;
-        }
-        .calendar-header .nav-btn:hover {
-            color: var(--accent);
-            background: var(--accent-light);
-        }
-
-        .calendar-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-        }
-        .calendar-days div {
-            padding: 10px 0;
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.75rem;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .calendar-dates {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            padding: 4px;
-            gap: 2px;
-        }
-        .calendar-dates .day {
-            padding: 10px 0;
-            text-align: center;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            position: relative;
-        }
-        .calendar-dates .day:hover {
-            background: var(--accent-light);
-            color: var(--accent);
-        }
-        .calendar-dates .day.active {
-            background: var(--accent);
-            color: #0d1526;
-            font-weight: 700;
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .calendar-dates .day.other-month {
-            color: var(--text-disabled);
-            opacity: 0.4;
-        }
-        .calendar-dates .day.today {
-            border: 2px solid var(--accent);
-        }
-        .calendar-dates .day.has-time::after {
-            content: "🕐";
-            position: absolute;
-            font-size: 0.5rem;
-            top: 2px;
-            right: 4px;
-            opacity: 0.6;
-        }
-
-        .time-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 14px 16px;
-            border-top: 1px solid var(--border);
-            background: var(--bg-secondary);
-        }
-        .time-selector .time-btn {
-            padding: 6px 16px;
-            border-radius: 50px;
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .time-selector .time-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        .time-selector .time-btn.active {
-            background: var(--accent);
-            color: #0d1526;
-            border-color: var(--accent);
-            font-weight: 700;
-        }
-        .time-selector .time-btn.custom-time-btn {
-            border-style: dashed;
-        }
-
-        .custom-time-input {
-            display: none;
-            padding: 12px 16px;
-            border-top: 1px solid var(--border);
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .custom-time-input.active {
-            display: flex;
-        }
-        .custom-time-input input {
-            flex: 1;
-            min-width: 120px;
-            padding: 8px 14px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-        }
-        .custom-time-input input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .selected-display {
-            padding: 12px 16px;
-            background: var(--bg-primary);
-            border-radius: var(--radius);
-            margin-top: 12px;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-        .selected-display strong {
-            color: var(--accent);
-        }
-
+        .input-with-icon select { padding-left: 42px !important; }
+        .input-with-icon textarea { padding-left: 42px !important; min-height: 60px; }
+        .input-with-icon textarea+.input-icon { top: 18px; transform: none; }
+        .input-with-icon:focus-within .input-icon { color: var(--accent); }
         .styled-select {
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a6b0cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -532,69 +265,6 @@
             padding-right: 40px !important;
             cursor: pointer;
         }
-
-        /* ===== БЛОК ОПЕКУНА ===== */
-        .guardian-block {
-            display: none;
-            background: var(--accent-light);
-            border: 1px solid var(--accent);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .guardian-block.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        .guardian-block .guardian-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            font-size: 1.05rem;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        .guardian-block .guardian-title i {
-            color: var(--accent);
-        }
-        .guardian-block .guardian-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 18px;
-        }
-        .parent-email-info {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 12px 16px;
-            margin: 8px 0 12px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-        .parent-email-info i {
-            color: var(--accent);
-            margin-right: 6px;
-        }
-
-        /* ===== БЛОК СОГЛАСИЙ ===== */
-        .consents-block {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px 24px;
-            margin-top: 8px;
-        }
-        .consents-block .consents-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-        .consents-block .checkbox-group {
-            margin: 6px 0;
-        }
-
         .checkbox-group {
             display: flex;
             align-items: flex-start;
@@ -615,15 +285,56 @@
             color: var(--text-secondary);
             cursor: pointer;
         }
-        .checkbox-group label a {
-            color: var(--accent);
-            text-decoration: none;
+        .checkbox-group label a { color: var(--accent); text-decoration: none; }
+        .guardian-block {
+            display: none;
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 20px;
         }
-
-        /* ===== PROGRESS BAR ===== */
-        .progress-container {
-            margin-bottom: 24px;
+        .guardian-block.active { display: block; animation: fadeIn 0.3s ease; }
+        .guardian-block .guardian-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 4px;
+            color: var(--text-primary);
         }
+        .guardian-block .guardian-title i { color: var(--accent); }
+        .guardian-block .guardian-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 18px;
+        }
+        .parent-email-info {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            margin: 8px 0 12px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .parent-email-info i { color: var(--accent); margin-right: 6px; }
+        .consents-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            margin-top: 8px;
+        }
+        .consents-block .consents-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .consents-block .checkbox-group { margin: 6px 0; }
+        .progress-container { margin-bottom: 24px; }
         .progress-container .progress-label {
             display: flex;
             justify-content: space-between;
@@ -645,15 +356,11 @@
             border-radius: 8px;
             transition: width 0.5s ease;
         }
-
-        /* ===== LOADING BUTTON ===== */
         .btn-loading {
             position: relative;
             pointer-events: none;
         }
-        .btn-loading .btn-text {
-            visibility: hidden;
-        }
+        .btn-loading .btn-text { visibility: hidden; }
         .btn-loading .spinner {
             position: absolute;
             left: 50%;
@@ -664,34 +371,22 @@
             gap: 10px;
             color: #0d1526;
         }
-        .btn-loading .spinner i {
-            animation: spin 0.8s linear infinite;
-        }
-
-        /* ===== SUCCESS OVERLAY ===== */
+        .btn-loading .spinner i { animation: spin 0.8s linear infinite; }
         .success-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0,0,0,0.7);
             backdrop-filter: blur(8px);
             z-index: 9999;
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.4s ease;
         }
-        .success-overlay.active {
-            display: flex;
-        }
+        .success-overlay.active { display: flex; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            from { opacity:0; transform:scale(0.9); }
+            to { opacity:1; transform:scale(1); }
         }
         .success-modal {
             background: var(--bg-card);
@@ -705,17 +400,9 @@
             animation: bounceIn 0.5s ease;
         }
         @keyframes bounceIn {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            70% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            0% { transform:scale(0.5); opacity:0; }
+            70% { transform:scale(1.05); }
+            100% { transform:scale(1); opacity:1; }
         }
         .success-modal .check-icon {
             display: inline-flex;
@@ -730,16 +417,12 @@
             font-size: 2.5rem;
             color: var(--green);
         }
-        .success-modal h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-        }
+        .success-modal h2 { font-size: 1.8rem; margin-bottom: 8px; }
         .success-modal p {
             color: var(--text-secondary);
             font-size: 1rem;
             margin-bottom: 20px;
         }
-
         .error-banner {
             display: none;
             background: var(--red-light);
@@ -750,114 +433,255 @@
             font-size: 0.9rem;
             margin-bottom: 20px;
         }
-        .error-banner.active {
-            display: block;
-        }
-
-        /* ===== УВЕДОМЛЕНИЕ "УПС" ===== */
-        .ups-overlay {
+        .error-banner.active { display: block; }
+        .consent-modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 10000;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 9998;
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.3s ease;
+            padding: 20px;
         }
-        .ups-overlay.active {
-            display: flex;
-        }
-        .ups-modal {
+        .consent-modal-overlay.active { display: flex; }
+        .consent-modal {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-xl);
-            padding: 40px 50px;
-            text-align: center;
-            max-width: 420px;
-            width: 90%;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 40px;
             box-shadow: var(--shadow-lg);
-            animation: bounceIn 0.5s ease;
+            position: relative;
+            animation: slideUp 0.4s ease;
         }
-        .ups-modal .ups-icon {
-            font-size: 3.5rem;
+        @keyframes slideUp {
+            from { opacity:0; transform:translateY(30px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        .consent-modal .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .consent-modal .modal-close:hover { color: var(--accent); }
+        .consent-modal .modal-icon {
+            text-align: center;
+            font-size: 2.5rem;
             color: var(--accent);
             margin-bottom: 12px;
         }
-        .ups-modal h2 {
+        .consent-modal h2 {
             font-size: 1.6rem;
-            margin-bottom: 6px;
+            text-align: center;
+            margin-bottom: 8px;
         }
-        .ups-modal p {
+        .consent-modal .modal-subtitle {
+            text-align: center;
             color: var(--text-secondary);
             font-size: 0.95rem;
-            margin-bottom: 4px;
+            margin-bottom: 20px;
         }
-        .ups-modal .timer {
-            font-size: 2.5rem;
-            font-weight: 800;
+        .consent-modal .consent-section {
+            margin: 16px 0;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--accent);
+        }
+        .consent-modal .consent-section h4 {
             color: var(--accent);
-            margin: 8px 0;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
         }
-        .ups-modal .timer-sub {
+        .consent-modal .consent-section p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        .consent-modal .consent-section ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 6px;
+        }
+        .consent-modal .consent-section ul li {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding: 3px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .consent-modal .consent-section ul li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: 700;
+        }
+        .consent-modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .calendar-wrapper {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+        .calendar-header .month-year { font-weight: 700; font-size: 1.1rem; }
+        .calendar-header .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        .calendar-header .nav-btn:hover { color: var(--accent); background: var(--accent-light); }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+        .calendar-days div {
+            padding: 10px 0;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.75rem;
             color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            padding: 4px;
+            gap: 2px;
+        }
+        .calendar-dates .day {
+            padding: 10px 0;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+        .calendar-dates .day:hover { background: var(--accent-light); color: var(--accent); }
+        .calendar-dates .day.active {
+            background: var(--accent);
+            color: #0d1526;
+            font-weight: 700;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .calendar-dates .day.other-month { color: var(--text-disabled); opacity: 0.4; }
+        .calendar-dates .day.today { border: 2px solid var(--accent); }
+        .calendar-dates .day.has-time::after {
+            content: "🕐";
+            position: absolute;
+            font-size: 0.5rem;
+            top: 2px;
+            right: 4px;
+            opacity: 0.6;
+        }
+        .time-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 14px 16px;
+            border-top: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+        .time-selector .time-btn {
+            padding: 6px 16px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 0.8rem;
+            font-weight: 500;
         }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .page-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .page-header .header-actions {
-                justify-content: flex-start;
-            }
-            .form-section {
-                padding: 24px;
-            }
-            .vacancy-info {
-                padding: 18px 20px;
-            }
-            .success-modal {
-                padding: 30px 20px;
-            }
-            .calendar-dates .day {
-                padding: 8px 0;
-                font-size: 0.8rem;
-            }
-            .ups-modal {
-                padding: 30px 24px;
-            }
+        .time-selector .time-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .time-selector .time-btn.active {
+            background: var(--accent);
+            color: #0d1526;
+            border-color: var(--accent);
+            font-weight: 700;
         }
-        @media (max-width: 480px) {
-            body {
-                padding: 12px;
-            }
-            .form-section {
-                padding: 18px;
-            }
-            .form-actions .btn {
-                width: 100%;
-                justify-content: center;
-            }
-            .time-selector .time-btn {
-                padding: 4px 12px;
-                font-size: 0.7rem;
-            }
-            .calendar-header .month-year {
-                font-size: 0.9rem;
-            }
-            .ups-modal {
-                padding: 24px 18px;
-            }
-            .ups-modal .timer {
-                font-size: 2rem;
-            }
+        .time-selector .time-btn.custom-time-btn { border-style: dashed; }
+        .custom-time-input {
+            display: none;
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .custom-time-input.active { display: flex; }
+        .custom-time-input input {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+        }
+        .custom-time-input input:focus { outline: none; border-color: var(--accent); }
+        .selected-display {
+            padding: 12px 16px;
+            background: var(--bg-primary);
+            border-radius: var(--radius);
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .selected-display strong { color: var(--accent); }
+        @media (max-width:768px) {
+            .form-row { grid-template-columns:1fr; }
+            .page-header { flex-direction:column; align-items:stretch; }
+            .page-header .header-actions { justify-content:flex-start; }
+            .form-section { padding:24px; }
+            .vacancy-info { padding:18px 20px; }
+            .success-modal { padding:30px 20px; }
+            .calendar-dates .day { padding:8px 0; font-size:0.8rem; }
+        }
+        @media (max-width:480px) {
+            body { padding:12px; }
+            .form-section { padding:18px; }
+            .form-actions .btn { width:100%; justify-content:center; }
+            .time-selector .time-btn { padding:4px 12px; font-size:0.7rem; }
+            .calendar-header .month-year { font-size:0.9rem; }
+            .consent-modal { padding:24px; }
+            .consent-modal h2 { font-size:1.3rem; }
         }
     </style>
 </head>
@@ -902,7 +726,7 @@
         <!-- ===== FORM ===== -->
         <section class="form-section" id="formSection">
             <h2>Анкета соискателя</h2>
-            <p class="subtitle">Заполните форму. После проверки мы отправим код подтверждения родителю.</p>
+            <p class="subtitle">Заполните форму. Если вам меньше 18 лет — после отправки мы попросим родителя подтвердить согласие по email.</p>
 
             <div class="error-banner" id="errorBanner">
                 <i class="fas fa-triangle-exclamation"></i>
@@ -920,6 +744,8 @@
             </div>
 
             <form id="applicationForm">
+
+                <!-- ===== СКРЫТЫЕ ПОЛЯ ===== -->
                 <input type="hidden" id="vacancyIdInput" value="" />
                 <input type="hidden" id="vacancyTitleInput" value="" />
 
@@ -945,8 +771,11 @@
                     <div class="form-group">
                         <label for="age">Возраст <span class="required">*</span></label>
                         <div class="input-with-icon">
-                            <input type="number" id="age" placeholder="Ваш возраст" min="11" max="99" required data-progress />
+                            <input type="number" id="age" placeholder="Ваш возраст" min="13" max="99" required data-progress />
                             <span class="input-icon"><i class="fas fa-calendar"></i></span>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-tertiary); margin-top:4px;">
+                            <i class="fas fa-info-circle"></i> Мы принимаем заявки только от 13 лет
                         </div>
                     </div>
                     <div class="form-group">
@@ -967,7 +796,7 @@
                 </div>
 
                 <!-- ===== ДОПОЛНИТЕЛЬНЫЕ ПОЛЯ ===== -->
-                <div style="margin: 24px 0 8px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <div style="margin: 24px 0 8px; border-top:1px solid var(--border); padding-top:20px;">
                     <p style="color:var(--text-secondary); font-size:0.9rem;"><i class="fas fa-arrow-down" style="color:var(--accent);"></i> Дополнительная информация</p>
                 </div>
 
@@ -977,12 +806,12 @@
                         <select id="languages" class="styled-select" required data-progress>
                             <option value="">Выберите язык</option>
                             <option value="Русский — родной">🇷🇺 Русский — родной</option>
-                            <option value="Английский — A1">🇬🇧 Английский — A1</option>
-                            <option value="Английский — A2">🇬🇧 Английский — A2</option>
-                            <option value="Английский — B1">🇬🇧 Английский — B1</option>
-                            <option value="Английский — B2">🇬🇧 Английский — B2</option>
-                            <option value="Английский — C1">🇬🇧 Английский — C1</option>
-                            <option value="Английский — C2">🇬🇧 Английский — C2</option>
+                            <option value="Английский — A1 (Начальный)">🇬🇧 Английский — A1</option>
+                            <option value="Английский — A2 (Элементарный)">🇬🇧 Английский — A2</option>
+                            <option value="Английский — B1 (Средний)">🇬🇧 Английский — B1</option>
+                            <option value="Английский — B2 (Выше среднего)">🇬🇧 Английский — B2</option>
+                            <option value="Английский — C1 (Продвинутый)">🇬🇧 Английский — C1</option>
+                            <option value="Английский — C2 (Профессиональный)">🇬🇧 Английский — C2</option>
                             <option value="Немецкий — A1">🇩🇪 Немецкий — A1</option>
                             <option value="Немецкий — A2">🇩🇪 Немецкий — A2</option>
                             <option value="Немецкий — B1">🇩🇪 Немецкий — B1</option>
@@ -996,12 +825,15 @@
                             <option value="Китайский — HSK 2">🇨🇳 Китайский — HSK 2</option>
                             <option value="Китайский — HSK 3">🇨🇳 Китайский — HSK 3</option>
                             <option value="Китайский — HSK 4">🇨🇳 Китайский — HSK 4</option>
-                            <option value="other">✏️ Другой язык</option>
+                            <option value="other">✏️ Другой язык (напишите ниже)</option>
                         </select>
                         <span class="input-icon"><i class="fas fa-language"></i></span>
                     </div>
                     <div id="otherLanguageGroup" style="display:none; margin-top:10px;">
-                        <input type="text" id="otherLanguage" placeholder="Напишите ваш язык и уровень" />
+                        <div class="input-with-icon">
+                            <input type="text" id="otherLanguage" placeholder="Напишите ваш язык и уровень" />
+                            <span class="input-icon"><i class="fas fa-pen"></i></span>
+                        </div>
                     </div>
                 </div>
 
@@ -1022,7 +854,7 @@
                         <span class="input-icon"><i class="fas fa-clock"></i></span>
                     </div>
                     <div style="font-size:0.8rem; color:var(--text-tertiary); margin-top:4px;">
-                        <i class="fas fa-info-circle"></i> У нас нет официального трудоустройства — это волонтёрское участие
+                        <i class="fas fa-info-circle"></i> У нас нет официального трудоустройства — это волонтёрское участие в проекте
                     </div>
                 </div>
 
@@ -1044,22 +876,22 @@
 
                     <div class="calendar-wrapper">
                         <div class="calendar-header">
-                            <button class="nav-btn" id="prevMonth"><i class="fas fa-chevron-left"></i></button>
+                            <button type="button" class="nav-btn" id="prevMonth"><i class="fas fa-chevron-left"></i></button>
                             <span class="month-year" id="monthYear">Март 2025</span>
-                            <button class="nav-btn" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
+                            <button type="button" class="nav-btn" id="nextMonth"><i class="fas fa-chevron-right"></i></button>
                         </div>
                         <div class="calendar-days">
                             <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
                         </div>
                         <div class="calendar-dates" id="calendarDates"></div>
                         <div class="time-selector" id="timeSelector">
-                            <button class="time-btn" data-time="10:00">🌅 10:00</button>
-                            <button class="time-btn" data-time="12:00">☀️ 12:00</button>
-                            <button class="time-btn" data-time="14:00">🌤️ 14:00</button>
-                            <button class="time-btn" data-time="16:00">🌥️ 16:00</button>
-                            <button class="time-btn" data-time="18:00">🌆 18:00</button>
-                            <button class="time-btn" data-time="20:00">🌙 20:00</button>
-                            <button class="time-btn custom-time-btn" id="customTimeBtn">✏️ Своё</button>
+                            <button type="button" class="time-btn" data-time="10:00">🌅 10:00</button>
+                            <button type="button" class="time-btn" data-time="12:00">☀️ 12:00</button>
+                            <button type="button" class="time-btn" data-time="14:00">🌤️ 14:00</button>
+                            <button type="button" class="time-btn" data-time="16:00">🌥️ 16:00</button>
+                            <button type="button" class="time-btn" data-time="18:00">🌆 18:00</button>
+                            <button type="button" class="time-btn" data-time="20:00">🌙 20:00</button>
+                            <button type="button" class="time-btn custom-time-btn" id="customTimeBtn">✏️ Своё</button>
                         </div>
                         <div class="custom-time-input" id="customTimeInput">
                             <input type="date" id="customDate" />
@@ -1084,7 +916,7 @@
                 <div class="form-group">
                     <label for="additionalInfo">Дополнительная информация <span class="optional">(необязательно)</span></label>
                     <div class="input-with-icon">
-                        <textarea id="additionalInfo" placeholder="Всё, что хотите добавить..." rows="3"></textarea>
+                        <textarea id="additionalInfo" placeholder="Всё, что вы хотите добавить к своей заявке..." rows="3"></textarea>
                         <span class="input-icon"><i class="fas fa-comment"></i></span>
                     </div>
                 </div>
@@ -1092,7 +924,7 @@
                 <!-- ===== БЛОК ОПЕКУНА ===== -->
                 <div class="guardian-block" id="guardianBlock">
                     <div class="guardian-title"><i class="fas fa-shield-heart"></i> Согласие родителя или опекуна</div>
-                    <p class="guardian-subtitle">Поскольку соискателю меньше 18 лет, участие возможно только с согласия родителя.</p>
+                    <p class="guardian-subtitle">Поскольку соискателю меньше 18 лет, участие возможно только с согласия родителя или законного представителя.</p>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -1113,13 +945,14 @@
 
                     <div class="parent-email-info">
                         <i class="fas fa-info-circle"></i>
-                        На email родителя будет отправлен код подтверждения.
+                        На указанный email родителя придёт письмо со ссылкой для подтверждения согласия.
+                        <a href="https://kirill12633.github.io/careers.metro.new/policy/minors/" target="_blank" style="color:var(--accent);">Подробнее о политике</a>
                     </div>
 
                     <div class="checkbox-group" style="margin-top:12px;">
                         <input type="checkbox" id="guardianConsent" data-progress />
                         <label for="guardianConsent">
-                            Я даю согласие на участие ребёнка в проекте <span class="required">*</span>
+                            Я являюсь родителем/законным представителем указанного несовершеннолетнего и даю согласие на его участие в проекте <span class="required">*</span>
                         </label>
                     </div>
                 </div>
@@ -1131,21 +964,21 @@
                     <div class="checkbox-group">
                         <input type="checkbox" id="consentPolicy" required data-progress />
                         <label for="consentPolicy">
-                            Я согласен с <a href="https://kirill12633.github.io/Metro.New.Official/ru/help/privacy-policy/" target="_blank">политикой конфиденциальности</a> <span class="required">*</span>
+                            Я согласен с <a href="https://kirill12633.github.io/Metro.New.Official/ru/help/privacy-policy/" target="_blank">условиями участия</a> в проекте <span class="required">*</span>
                         </label>
                     </div>
 
                     <div class="checkbox-group">
                         <input type="checkbox" id="consentData" required data-progress />
                         <label for="consentData">
-                            Я даю согласие на обработку своих персональных данных <span class="required">*</span>
+                            Я даю <a href="#" onclick="openConsentModal(); return false;">согласие на обработку</a> указанных мной данных <span class="required">*</span>
                         </label>
                     </div>
 
                     <div class="checkbox-group">
                         <input type="checkbox" id="consentContact" required data-progress />
                         <label for="consentContact">
-                            Я согласен на получение сообщений по Email <span class="required">*</span>
+                            Я согласен на получение сообщений по указанному Email <span class="required">*</span>
                         </label>
                     </div>
                 </div>
@@ -1167,28 +1000,75 @@
 
     </div>
 
-    <!-- ===== УВЕДОМЛЕНИЕ "УПС" ===== -->
-    <div class="ups-overlay" id="upsOverlay">
-        <div class="ups-modal">
-            <div class="ups-icon">😅</div>
-            <h2>Упс! Что-то пошло не так</h2>
-            <p>Попробуйте ещё раз через</p>
-            <div class="timer" id="upsTimer">5</div>
-            <div class="timer-sub">секунд</div>
+    <!-- ===== МОДАЛЬНОЕ ОКНО СОГЛАСИЯ ===== -->
+    <div class="consent-modal-overlay" id="consentModalOverlay">
+        <div class="consent-modal">
+            <button class="modal-close" onclick="closeConsentModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>Согласие на обработку данных</h2>
+            <p class="modal-subtitle">Коротко о том, как мы обращаемся с вашими данными</p>
+
+            <div class="consent-section">
+                <h4>📋 Какие данные мы собираем</h4>
+                <ul>
+                    <li>Имя, Email, Возраст</li>
+                    <li>Опыт работы и мотивация</li>
+                    <li>Языки, график работы, зарплатные ожидания</li>
+                    <li>Удобное время для собеседования</li>
+                    <li>Ссылка на портфолио (если указана)</li>
+                    <li>Дополнительная информация (если указана)</li>
+                    <li>Данные родителя/опекуна (для несовершеннолетних)</li>
+                </ul>
+            </div>
+
+            <div class="consent-section">
+                <h4>🎯 Для чего мы используем ваши данные</h4>
+                <ul>
+                    <li>Для рассмотрения вашей заявки на участие</li>
+                    <li>Для связи с вами по вопросам собеседования</li>
+                    <li>Для отправки уведомлений о статусе заявки</li>
+                </ul>
+            </div>
+
+            <div class="consent-section">
+                <h4>🔒 Как мы обращаемся с данными</h4>
+                <ul>
+                    <li>Мы не публикуем и не передаём ваши данные третьим лицам</li>
+                    <li>Доступ к данным есть только у ответственных участников команды</li>
+                    <li>Вы можете попросить удалить свои данные в любое время</li>
+                </ul>
+                <p style="margin-top:8px; font-size:0.8rem;">
+                    Это неформальный проект-сообщество без юридического лица — мы стараемся обращаться с вашими данными бережно,
+                    но это не то же самое, что формальная защита данных зарегистрированной компании.
+                </p>
+            </div>
+
+            <div class="consent-section">
+                <h4>⏳ Срок хранения данных</h4>
+                <p>Ваши данные хранятся в течение 1 года с момента подачи заявки.</p>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="closeConsentModal()">
+                    <i class="fas fa-check"></i> Я ознакомлен(а) и согласен(на)
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- ===== SUCCESS OVERLAY ===== -->
+    <!-- ===== SUCCESS OVERLAY (для несовершеннолетних) ===== -->
     <div class="success-overlay" id="successOverlay">
         <div class="success-modal">
             <div class="check-icon"><i class="fas fa-check-circle"></i></div>
-            <h2>📨 Код подтверждения отправлен!</h2>
-            <p style="color:var(--text-secondary);">
+            <h2 id="successTitle">📨 Письмо родителю отправлено!</h2>
+            <p style="color:var(--text-secondary);" id="successText">
                 На email родителя <strong id="parentEmailDisplay" style="color:var(--accent);">—</strong>
-                отправлен код подтверждения.
+                отправлена ссылка для подтверждения согласия.
             </p>
-            <p style="color:var(--text-tertiary); font-size:0.85rem; margin-top:8px;">
-                Попросите родителя ввести код на странице подтверждения.
+            <p style="color:var(--text-tertiary); font-size:0.85rem; margin-top:8px;" id="successHint">
+                Попросите родителя перейти по ссылке из письма, чтобы завершить оформление заявки.
             </p>
             <button class="btn btn-primary" onclick="closeSuccess()" style="margin-top:16px;">
                 <i class="fas fa-arrow-left"></i> Вернуться
@@ -1197,41 +1077,15 @@
     </div>
 
     <!-- ============================================================ -->
-    <!-- ===== ВСЕ СКРИПТЫ ===== -->
+    <!-- ===== КОНФИГУРАЦИЯ ===== -->
     <!-- ============================================================ -->
     <script>
-        // ============================================================
-        // ===== МАСКИРОВАНИЕ ДАННЫХ =====
-        // ============================================================
-        function maskName(name) {
-            if (!name || name.length < 2) return '***';
-            if (name.length === 2) return name.charAt(0) + '*';
-            return name.charAt(0) + '*'.repeat(Math.min(name.length - 2, 4)) + name.charAt(name.length - 1);
-        }
+        // ===== ЗАМЕНИТЕ на URL вашего задеплоенного Cloudflare Worker =====
+        const WORKER_URL = 'https://metro-new-applications.YOUR-SUBDOMAIN.workers.dev';
 
-        function maskEmail(email) {
-            if (!email || !email.includes('@')) return '***@***';
-            const parts = email.split('@');
-            const name = parts[0];
-            const domain = parts[1];
-            if (name.length <= 2) return '*'.repeat(name.length) + '@' + domain;
-            return name.substring(0, 2) + '*'.repeat(Math.min(name.length - 2, 4)) + '@' + domain;
-        }
-
-        function maskData(data) {
-            if (!data) return '***';
-            if (typeof data === 'string') {
-                if (data.includes('@')) return maskEmail(data);
-                return maskName(data);
-            }
-            return data;
-        }
-
-        window.Mask = { maskName, maskEmail, maskData };
-
-        // ============================================================
-        // ===== FIREBASE =====
-        // ============================================================
+        // ===== FIREBASE — используется ТОЛЬКО для чтения публичной инфы о вакансии =====
+        // Firestore Rules должны разрешать read только для коллекции "careers"
+        // и запрещать всё остальное (см. README).
         const firebaseConfig = {
             apiKey: "AIzaSyAVSAXTU1VqF36GJA1pQOfxRxo3_ixW7F4",
             authDomain: "metro-new-admin.firebaseapp.com",
@@ -1244,55 +1098,11 @@
         const db = firebase.firestore();
 
         // ============================================================
-        // ===== EMAILJS =====
-        // ============================================================
-        const EMAILJS_CONFIG = {
-            serviceId: "service_wmb3jym",
-            templateApplication: "template_k4n4o5k",
-            templateParent: "template_toohaj8",
-            publicKey: "UO3RV5cAt1ujKWDPh"
-        };
-        emailjs.init(EMAILJS_CONFIG.publicKey);
-
-        // ============================================================
-        // ===== ГЕНЕРАЦИЯ КОДА =====
-        // ============================================================
-        function generateCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
-        }
-
-        // ============================================================
-        // ===== УВЕДОМЛЕНИЕ "УПС" =====
-        // ============================================================
-        function showUpsMessage(seconds = 5) {
-            const overlay = document.getElementById('upsOverlay');
-            const timer = document.getElementById('upsTimer');
-            let remaining = seconds;
-
-            overlay.classList.add('active');
-            timer.textContent = remaining;
-
-            const interval = setInterval(() => {
-                remaining--;
-                timer.textContent = remaining;
-                if (remaining <= 0) {
-                    clearInterval(interval);
-                    overlay.classList.remove('active');
-                }
-            }, 1000);
-        }
-
-        // ============================================================
-        // ===== ОСНОВНОЙ КОД =====
+        // ===== MAIN SCRIPT =====
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
 
-            // ===== DOM ЭЛЕМЕНТЫ =====
+            // ===== DOM =====
             const infoLoading = document.getElementById('infoLoading');
             const infoContent = document.getElementById('infoContent');
             const vBadge = document.getElementById('vBadge');
@@ -1310,6 +1120,7 @@
             const experienceInput = document.getElementById('experience');
             const motivationInput = document.getElementById('motivation');
             const languagesSelect = document.getElementById('languages');
+            const otherLanguageGroup = document.getElementById('otherLanguageGroup');
             const otherLanguageInput = document.getElementById('otherLanguage');
             const scheduleSelect = document.getElementById('schedulePreference');
             const salaryInput = document.getElementById('salaryExpectations');
@@ -1332,9 +1143,14 @@
             const form = document.getElementById('applicationForm');
             const submitBtn = document.getElementById('submitBtn');
             const successOverlay = document.getElementById('successOverlay');
+            const successTitle = document.getElementById('successTitle');
+            const successText = document.getElementById('successText');
+            const successHint = document.getElementById('successHint');
             const errorBanner = document.getElementById('errorBanner');
             const errorBannerText = document.getElementById('errorBannerText');
             const parentEmailDisplay = document.getElementById('parentEmailDisplay');
+
+            const consentModalOverlay = document.getElementById('consentModalOverlay');
 
             // ===== КАЛЕНДАРЬ =====
             const monthYear = document.getElementById('monthYear');
@@ -1356,7 +1172,7 @@
             let vacancyTitle = '';
 
             // ============================================================
-            // ===== ЗАГРУЗКА ВАКАНСИИ =====
+            // ===== ЗАГРУЗКА ВАКАНСИИ (только чтение) =====
             // ============================================================
             function getVacancyIdFromUrl() {
                 const params = new URLSearchParams(window.location.search);
@@ -1417,9 +1233,7 @@
             // ===== КАЛЕНДАРЬ =====
             // ============================================================
             function renderCalendar() {
-                const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь',
-                    'Ноябрь', 'Декабрь'
-                ];
+                const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
                 monthYear.textContent = months[currentMonth] + ' ' + currentYear;
 
                 const firstDay = new Date(currentYear, currentMonth, 1).getDay();
@@ -1441,8 +1255,8 @@
                 for (let d = 1; d <= daysInMonth; d++) {
                     let classes = 'day';
                     if (isTodayMonth && d === todayDate) classes += ' today';
-                    if (selectedDate && d === selectedDate && currentMonth === selectedDate.getMonth() && currentYear ===
-                        selectedDate.getFullYear()) classes += ' active';
+                    if (selectedDate && d === selectedDate.getDate() && currentMonth === selectedDate.getMonth() && currentYear === selectedDate
+                        .getFullYear()) classes += ' active';
                     if (selectedTime) classes += ' has-time';
                     html += `<div class="${classes}" data-day="${d}">${d}</div>`;
                 }
@@ -1553,12 +1367,11 @@
             // ===== ЯЗЫКИ =====
             // ============================================================
             languagesSelect.addEventListener('change', function() {
-                const otherGroup = document.getElementById('otherLanguageGroup');
                 if (this.value === 'other') {
-                    otherGroup.style.display = 'block';
+                    otherLanguageGroup.style.display = 'block';
                     otherLanguageInput.required = true;
                 } else {
-                    otherGroup.style.display = 'none';
+                    otherLanguageGroup.style.display = 'none';
                     otherLanguageInput.required = false;
                 }
                 updateProgress();
@@ -1630,7 +1443,22 @@
             });
 
             // ============================================================
-            // ===== ОТПРАВКА =====
+            // ===== МОДАЛКА СОГЛАСИЯ =====
+            // ============================================================
+            function openConsentModal() {
+                consentModalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeConsentModal() {
+                consentModalOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+                consentData.checked = true;
+                updateProgress();
+            }
+
+            // ============================================================
+            // ===== ОТПРАВКА — теперь через Cloudflare Worker =====
             // ============================================================
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
@@ -1651,40 +1479,15 @@
                     languageDisplay = otherLanguageInput.value.trim() || 'Другой (не указан)';
                 }
 
-                // ===== ВАЛИДАЦИЯ =====
-                if (!name || !email || !age || !experience || !motivation || !languages || !schedule || !salary || !
-                    datetime) {
+                // ===== Быстрая проверка на клиенте (сервер всё равно перепроверит) =====
+                if (!name || !email || !age || !experience || !motivation || !languages || !schedule || !salary || !datetime) {
                     errorBannerText.textContent = 'Заполните все обязательные поля.';
                     errorBanner.classList.add('active');
                     return;
                 }
 
-                if (!email.includes('@')) {
-                    errorBannerText.textContent = 'Введите корректный email.';
-                    errorBanner.classList.add('active');
-                    return;
-                }
-
-                if (parseInt(age) < 11 || parseInt(age) > 99) {
-                    errorBannerText.textContent = 'Возраст должен быть от 11 до 99 лет.';
-                    errorBanner.classList.add('active');
-                    return;
-                }
-
-                if (!consentPolicy.checked) {
-                    errorBannerText.textContent = 'Необходимо согласие с политикой конфиденциальности.';
-                    errorBanner.classList.add('active');
-                    return;
-                }
-
-                if (!consentData.checked) {
-                    errorBannerText.textContent = 'Необходимо дать согласие на обработку персональных данных.';
-                    errorBanner.classList.add('active');
-                    return;
-                }
-
-                if (!consentContact.checked) {
-                    errorBannerText.textContent = 'Необходимо согласие на получение сообщений.';
+                if (!consentPolicy.checked || !consentData.checked || !consentContact.checked) {
+                    errorBannerText.textContent = 'Необходимо принять все согласия.';
                     errorBanner.classList.add('active');
                     return;
                 }
@@ -1692,109 +1495,66 @@
                 const guardianName = guardianNameInput.value.trim();
                 const guardianEmail = guardianEmailInput.value.trim();
 
-                if (isMinor()) {
-                    if (!guardianName || !guardianEmail) {
-                        errorBannerText.textContent = 'Укажите данные родителя/опекуна.';
-                        errorBanner.classList.add('active');
-                        return;
-                    }
-                    if (!guardianEmail.includes('@')) {
-                        errorBannerText.textContent = 'Введите корректный email родителя.';
-                        errorBanner.classList.add('active');
-                        return;
-                    }
-                    if (!guardianConsentCheckbox.checked) {
-                        errorBannerText.textContent = 'Требуется согласие родителя или законного представителя.';
-                        errorBanner.classList.add('active');
-                        return;
-                    }
+                if (isMinor() && !guardianConsentCheckbox.checked) {
+                    errorBannerText.textContent = 'Требуется отметка согласия родителя.';
+                    errorBanner.classList.add('active');
+                    return;
                 }
 
-                // ===== ГЕНЕРАЦИЯ КОДА =====
-                const code = generateCode();
-
-                // ===== ПОДГОТОВКА ДАННЫХ =====
-                const applicationData = {
-                    code: code,
+                const payload = {
                     vacancyId: vacancyIdInput.value,
-                    vacancyTitle: vacancyTitleInput.value,
-                    // Оригинальные данные (для админов)
+                    vacancyTitle: vacancyTitle,
                     name: name,
                     email: email,
-                    age: parseInt(age),
-                    is_minor: isMinor() ? 'Да' : 'Нет',
+                    age: age,
                     experience: experience,
                     motivation: motivation,
                     languages: languageDisplay,
                     schedule: schedule,
                     salary: salary + ' Robux',
-                    interview_time: datetime,
-                    portfolio: portfolioInput.value.trim() || 'Не указано',
-                    additional: additionalInput.value.trim() || 'Не указано',
-                    parentName: isMinor() ? guardianName : '—',
-                    parentEmail: isMinor() ? guardianEmail : '—',
-                    // МАСКИРОВАННЫЕ ДАННЫЕ (для показа родителю)
-                    maskName: Mask.maskName(name),
-                    maskEmail: Mask.maskEmail(email),
-                    maskParentName: isMinor() ? Mask.maskName(guardianName) : '—',
-                    maskParentEmail: isMinor() ? Mask.maskEmail(guardianEmail) : '—',
-                    // Согласия
-                    consent_policy: consentPolicy.checked,
-                    consent_data: consentData.checked,
-                    consent_contact: consentContact.checked,
-                    guardian_consent: isMinor() ? guardianConsentCheckbox.checked : false,
-                    status: 'pending',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+                    interviewTime: datetime,
+                    portfolio: portfolioInput.value.trim(),
+                    additional: additionalInput.value.trim(),
+                    guardianName: isMinor() ? guardianName : '',
+                    guardianEmail: isMinor() ? guardianEmail : '',
+                    guardianConsent: isMinor() ? guardianConsentCheckbox.checked : false,
+                    consentPolicy: consentPolicy.checked,
+                    consentData: consentData.checked,
+                    consentContact: consentContact.checked,
                 };
 
-                // ===== БЛОКИРУЕМ КНОПКУ =====
-                submitBtn.disabled = true;
                 submitBtn.classList.add('btn-loading');
-                submitBtn.querySelector('.btn-text').style.display = 'none';
-                submitBtn.querySelector('.spinner').style.display = 'flex';
+                submitBtn.querySelector('.spinner').style.display = 'inline-flex';
+                submitBtn.disabled = true;
 
                 try {
-                    // ===== СОХРАНЕНИЕ В FIREBASE =====
-                    const docRef = await db.collection('applications').add(applicationData);
-                    console.log('✅ Заявка сохранена, ID:', docRef.id);
+                    const res = await fetch(`${WORKER_URL}/api/apply`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    const result = await res.json();
 
-                    // ===== ОТПРАВКА ПИСЬМА РОДИТЕЛЯМ =====
-                    if (isMinor()) {
-                        try {
-                            const confirmLink = 'https://kirill12633.github.io/careers.metro.new/confirm/';
-
-                            const parentData = {
-                                parent_name: guardianName,
-                                parent_email: guardianEmail,
-                                child_name: name,
-                                child_age: age,
-                                vacancy: vacancyTitleInput.value || 'Не указана',
-                                code: code,
-                                confirm_link: confirmLink,
-                                type: 'Запрос согласия родителя',
-                                message: `Ваш ребёнок ${name} подал заявку. Код подтверждения: ${code}`
-                            };
-
-                            // ✅ Используем SDK
-                            await emailjs.send(
-                                EMAILJS_CONFIG.serviceId,
-                                EMAILJS_CONFIG.templateParent,
-                                parentData
-                            );
-                            console.log('✅ Письмо родителю отправлено');
-
-                        } catch (emailError) {
-                            console.error('❌ Ошибка отправки письма:', emailError);
-                            // Не прерываем выполнение
-                        }
+                    if (!res.ok || !result.ok) {
+                        const details = result.details ? result.details.join(', ') : 'Не удалось отправить заявку.';
+                        errorBannerText.textContent = details;
+                        errorBanner.classList.add('active');
+                        return;
                     }
 
-                    // ===== ПОКАЗЫВАЕМ УСПЕХ =====
-                    parentEmailDisplay.textContent = isMinor() ? guardianEmail : '— (совершеннолетний)';
+                    if (result.isMinor) {
+                        successTitle.textContent = '📨 Письмо родителю отправлено!';
+                        parentEmailDisplay.textContent = guardianEmail;
+                        successText.style.display = 'block';
+                        successHint.style.display = 'block';
+                    } else {
+                        successTitle.textContent = '✅ Заявка принята!';
+                        successText.style.display = 'none';
+                        successHint.textContent = 'Мы свяжемся с вами по указанному email.';
+                    }
+
                     successOverlay.classList.add('active');
 
-                    // Сбрасываем форму
                     form.reset();
                     document.querySelectorAll('.calendar-dates .day').forEach(c => c.classList.remove('active'));
                     timeBtns.forEach(b => b.classList.remove('active'));
@@ -1807,17 +1567,14 @@
                     updateGuardianBlock();
                     updateProgress();
 
-                } catch (error) {
-                    console.error('❌ Ошибка:', error);
-                    // Показываем "Упс" вместо ошибки
-                    showUpsMessage(5);
-                    // Скрываем ошибку
-                    errorBanner.classList.remove('active');
+                } catch (err) {
+                    console.error(err);
+                    errorBannerText.textContent = 'Ошибка сети. Проверьте подключение и попробуйте снова.';
+                    errorBanner.classList.add('active');
                 } finally {
-                    submitBtn.disabled = false;
                     submitBtn.classList.remove('btn-loading');
-                    submitBtn.querySelector('.btn-text').style.display = 'inline-flex';
                     submitBtn.querySelector('.spinner').style.display = 'none';
+                    submitBtn.disabled = false;
                 }
             });
 
@@ -1869,6 +1626,9 @@
             renderCalendar();
             updateSelectedDisplay();
 
+            // Для глобального доступа
+            window.openConsentModal = openConsentModal;
+            window.closeConsentModal = closeConsentModal;
             window.closeSuccess = closeSuccess;
         });
     </script>
