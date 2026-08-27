@@ -1536,9 +1536,12 @@
                     const result = await res.json();
 
                     if (!res.ok || !result.ok) {
-                        const details = result.details ? result.details.join(', ') : 'Не удалось отправить заявку.';
+                        const details = Array.isArray(result.details)
+                            ? result.details.join(', ')
+                            : (result.details || 'Не удалось отправить заявку.');
                         errorBannerText.textContent = details;
                         errorBanner.classList.add('active');
+                        console.error('Ответ сервера:', result);
                         return;
                     }
 
