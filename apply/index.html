@@ -13,6 +13,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
+    <!-- ===== CLOUDFLARE TURNSTILE (капча) ===== -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
     <style>
         /* ===== СТИЛИ (без изменений) ===== */
         :root {
@@ -983,6 +986,8 @@
                 </div>
 
                 <!-- ===== КНОПКИ ===== -->
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAACJJ-EXmOljL2_UU" style="margin-top:20px;"></div>
+
                 <div class="form-actions" style="margin-top:24px;">
                     <button type="submit" class="btn btn-green" id="submitBtn">
                         <span class="btn-text"><i class="fas fa-paper-plane"></i> Отправить заявку</span>
@@ -1500,10 +1505,21 @@
                     return;
                 }
 
+                const turnstileToken = (typeof turnstile !== 'undefined' && document.querySelector('.cf-turnstile'))
+                    ? turnstile.getResponse()
+                    : null;
+
+                if (!turnstileToken) {
+                    errorBannerText.textContent = 'Подтвердите, что вы не робот (капча внизу формы).';
+                    errorBanner.classList.add('active');
+                    return;
+                }
+
                 const payload = {
                     vacancyId: vacancyIdInput.value,
                     vacancyTitle: vacancyTitle,
                     name: name,
+                    turnstileToken: turnstileToken,
                     email: email,
                     age: age,
                     experience: experience,
@@ -1577,6 +1593,7 @@
                     submitBtn.classList.remove('btn-loading');
                     submitBtn.querySelector('.spinner').style.display = 'none';
                     submitBtn.disabled = false;
+                    if (typeof turnstile !== 'undefined') turnstile.reset();
                 }
             });
 
