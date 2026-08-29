@@ -1024,6 +1024,7 @@
                     <li>Ссылка на портфолио (если указана)</li>
                     <li>Дополнительная информация (если указана)</li>
                     <li>Данные родителя/опекуна (для несовершеннолетних)</li>
+                    <li>IP-адрес (технически, для защиты формы от спама и злоупотреблений)</li>
                 </ul>
             </div>
 
@@ -1569,6 +1570,10 @@
                         successTitle.textContent = '✅ Заявка принята!';
                         successText.style.display = 'none';
                         successHint.textContent = 'Мы свяжемся с вами по указанному email.';
+                    }
+
+                    if (result.notifyErrors) {
+                        console.warn('Проблемы с уведомлениями (заявка сохранена):', result.notifyErrors);
                     }
 
                     successOverlay.classList.add('active');
